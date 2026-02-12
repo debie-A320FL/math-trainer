@@ -127,7 +127,7 @@
 
             <h2 id="question"></h2>
 
-            <input type="text" id="answer">
+            <input type="number" id="answer" inputmode="numeric" pattern="[0-9\-]*">
             <button id="submit-btn">Valider</button>
 
             <p id="feedback"></p>
@@ -207,7 +207,9 @@
                 qs("#score").textContent = "Score : " + state.score;
                 qs("#range-info").textContent = "Range : " + state.min + " - " + state.max;
 
-                qs("#answer").value = "";
+                const answerInput = qs("#answer");
+                answerInput.value = "";
+                answerInput.focus(); // autofocus pour mobile
                 qs("#feedback").textContent = "";
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
