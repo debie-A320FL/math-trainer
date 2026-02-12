@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Math Trainer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Math Trainer</h1>
+
+    <div class="container">
+
+        <!-- ================= CONFIG ================= -->
+
+        <section id="config" class="card">
+
+            <h2>Paramètres</h2>
+
+            <h3>Opérations</h3>
+            <label><input type="checkbox" id="op-add" checked> Addition</label>
+            <label><input type="checkbox" id="op-sub" checked> Soustraction</label>
+            <label><input type="checkbox" id="op-mul" checked> Multiplication</label>
+
+            <h3>Type de Range</h3>
+            <label><input type="radio" name="range-mode" value="fixed" checked> Range fixe</label>
+            <label><input type="radio" name="range-mode" value="dynamic"> Range dynamique</label>
+
+            <!-- ===== RANGE FIXE ===== -->
+
+            <div id="fixed-range">
+
+                <h4>Range fixe (valeur absolue)</h4>
+
+                <div class="form-group">
+                    <label>Min :</label>
+                    <input type="number" id="fixed-min" value="2" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Max :</label>
+                    <input type="number" id="fixed-max" value="10" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="negatives">
+                        Inclure nombres négatifs (30%)
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- ===== RANGE DYNAMIQUE ===== -->
+
+            <div id="dynamic-range" class="hidden">
+
+                <h4>Range dynamique</h4>
+
+                <div class="form-group">
+                    <label>Min départ :</label>
+                    <input type="number" id="dyn-min" value="2" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Max départ :</label>
+                    <input type="number" id="dyn-max" value="10" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>Augmentation par bonne réponse :</label>
+                    <input type="number" id="dyn-inc" value="2" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>Plafond max :</label>
+                    <input type="number" id="dyn-cap" value="100" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="dyn-negatives">
+                        Inclure nombres négatifs (30%)
+                    </label>
+                </div>
+
+                <p class="help">
+                    À chaque bonne réponse, le max augmente.
+                    Il ne dépassera jamais le plafond.
+                </p>
+
+            </div>
+
+            <h3>Nombre de questions</h3>
+
+            <label>
+                <input type="radio" name="qmode" value="limited" checked>
+                Limité :
+            </label>
+            <input type="number" id="num-questions" value="10" min="1">
+
+            <br>
+
+            <label>
+                <input type="radio" name="qmode" value="unlimited">
+                Illimité
+            </label>
+
+            <br><br>
+            <button id="start-btn">Démarrer</button>
+
+        </section>
+
+        <!-- ================= EXERCISE ================= -->
+
+        <section id="exercise" class="card hidden">
+
+            <div class="top-bar">
+                <span id="progress"></span>
+                <span id="score"></span>
+                <span id="range-info"></span>
+                <button id="menu-btn">Menu</button>
+            </div>
+
+            <h2 id="question"></h2>
+
+            <input type="text" id="answer">
+            <button id="submit-btn">Valider</button>
+
+            <p id="feedback"></p>
+
+            <button id="show-answer-btn" class="hidden">Voir réponse</button>
+            <button id="next-btn" class="hidden">Suivant</button>
+
+        </section>
+
+    </div>
+
+    <script>
+        (function () {
+
+            const qs = s => document.querySelector(s);
+            function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+            let state;
+
+            function reset() {
+                state = {
+                    mode: null,
+                    ops: [],
+                    min: 0,
+                    max: 0,
+                    inc: 0,
+                    cap: 0,
+                    neg: false,
+                    index: 0,
+                    total: 0,
+                    unlimited: false,
+                    score: 0,
+                    current: null
+                };
+            }
+
+            function format(n) {
+                if (n < 0) return "(- " + Math.abs(n) + ")";
+                return n;
+            }
+
+            function generateNumber() {
+                let v = rand(state.min, state.max);
+                if (state.neg && Math.random() < 0.3) v = -v;
+                return v;
+            }
+
+            function nextQuestion() {
+
+                if (!state.unlimited && state.index >= state.total) {
+                    alert("Session terminée ! Score : " + state.score + " / " + state.total);
+                    backToMenu();
+                    return;
+                }
+
+                state.index++;
+
+                let op = state.ops[rand(0, state.ops.length - 1)];
+                let a = generateNumber();
+                let b = generateNumber();
+
+                let textOp = op === "add" ? "+" : op === "sub" ? "-" : "×";
+                let question = format(a) + " " + textOp + " " + format(b);
+
+                let correct = op === "add" ? a + b : op === "sub" ? a - b : a * b;
+
+                state.current = { question, correct };
+
+                qs("#question").textContent = question + " = ?";
+
+                if (state.unlimited) {
+                    qs("#progress").textContent = "Question : " + state.index;
+                } else {
+                    qs("#progress").textContent = "Question " + state.index + " / " + state.total;
+                }
+
+                qs("#score").textContent = "Score : " + state.score;
+                qs("#range-info").textContent = "Range : " + state.min + " - " + state.max;
+
+                qs("#answer").value = "";
+                qs("#feedback").textContent = "";
+                qs("#show-answer-btn").classList.add("hidden");
+                qs("#next-btn").classList.add("hidden");
+            }
+
+            function submit() {
+
+                let val = Number(qs("#answer").value);
+                if (isNaN(val)) return;
+
+                if (val === state.current.correct) {
+
+                    state.score++;
+
+                    if (state.mode === "dynamic") {
+                        state.max = Math.min(state.max + state.inc, state.cap);
+                    }
+
+                    nextQuestion();
+
+                } else {
+                    qs("#feedback").textContent = "Incorrect, réessaie.";
+                    qs("#show-answer-btn").classList.remove("hidden");
+                }
+            }
+
+            function backToMenu() {
+                qs("#exercise").classList.add("hidden");
+                qs("#config").classList.remove("hidden");
+            }
+
+            qs("#start-btn").onclick = function () {
+
+                reset();
+
+                state.ops = [];
+                if (qs("#op-add").checked) state.ops.push("add");
+                if (qs("#op-sub").checked) state.ops.push("sub");
+                if (qs("#op-mul").checked) state.ops.push("mul");
+                if (state.ops.length === 0) return alert("Choisis au moins une opération.");
+
+                let qmode = document.querySelector("input[name='qmode']:checked").value;
+                state.unlimited = (qmode === "unlimited");
+
+                if (!state.unlimited) {
+                    state.total = Number(qs("#num-questions").value);
+                }
+
+                let mode = document.querySelector("input[name='range-mode']:checked").value;
+                state.mode = mode;
+
+                if (mode === "fixed") {
+                    state.min = Number(qs("#fixed-min").value);
+                    state.max = Number(qs("#fixed-max").value);
+                    state.neg = qs("#negatives").checked;
+                } else {
+                    state.min = Number(qs("#dyn-min").value);
+                    state.max = Number(qs("#dyn-max").value);
+                    state.inc = Number(qs("#dyn-inc").value);
+                    state.cap = Number(qs("#dyn-cap").value);
+                    state.neg = qs("#dyn-negatives").checked;
+                }
+
+                qs("#config").classList.add("hidden");
+                qs("#exercise").classList.remove("hidden");
+
+                nextQuestion();
+            };
+
+            qs("#submit-btn").onclick = submit;
+            qs("#answer").addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+
+            qs("#show-answer-btn").onclick = function () {
+                qs("#feedback").textContent = "Bonne réponse : " + state.current.correct;
+                qs("#show-answer-btn").classList.add("hidden");
+                qs("#next-btn").classList.remove("hidden");
+            };
+
+            qs("#next-btn").onclick = nextQuestion;
+
+            qs("#menu-btn").onclick = backToMenu;
+
+            document.querySelectorAll("input[name='range-mode']").forEach(r => {
+                r.addEventListener("change", () => {
+                    if (r.value === "fixed" && r.checked) {
+                        qs("#fixed-range").classList.remove("hidden");
+                        qs("#dynamic-range").classList.add("hidden");
+                    }
+                    if (r.value === "dynamic" && r.checked) {
+                        qs("#fixed-range").classList.add("hidden");
+                        qs("#dynamic-range").classList.remove("hidden");
+                    }
+                });
+            });
+
+            reset();
+
+        })();
+    </script>
+
+</body>
+
+</html>
