@@ -28,7 +28,7 @@
             <!-- ***** CONFIG ENTIERS ***** -->
             <div id="config-int">
                 <h2>Paramètres Entiers</h2>
-                
+
                 <h3>Opérations</h3>
                 <div class="chk-group">
                     <label><input type="checkbox" id="int-op-add" checked> Addition</label>
@@ -49,7 +49,8 @@
                         <span style="font-size:0.9em; color:#555">Ex: Min 2, Max 10 &rarr; 3, 7, 9...</span>
                     </p>
                     <div class="form-group"><label>Min :</label><input type="number" id="int-fixed-min" value="2"></div>
-                    <div class="form-group"><label>Max :</label><input type="number" id="int-fixed-max" value="10"></div>
+                    <div class="form-group"><label>Max :</label><input type="number" id="int-fixed-max" value="10">
+                    </div>
                 </div>
 
                 <div id="int-dynamic-range" class="hidden">
@@ -57,14 +58,16 @@
                     <p class="range-explain">
                         La difficulté (Max) augmente automatiquement à chaque bonne réponse.
                     </p>
-                    <div class="form-group"><label>Départ :</label><input type="number" id="int-dyn-max" value="10"></div>
-                    <div class="form-group"><label>Plafond :</label><input type="number" id="int-dyn-cap" value="100"></div>
+                    <div class="form-group"><label>Départ :</label><input type="number" id="int-dyn-max" value="10">
+                    </div>
+                    <div class="form-group"><label>Plafond :</label><input type="number" id="int-dyn-cap" value="100">
+                    </div>
                 </div>
 
                 <h3>Options</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="int-negatives"> 
+                        <input type="checkbox" id="int-negatives">
                         Inclure nombres négatifs (50%)
                         <br><small style="color:#666">Le nombre peut être -5 comme 5.</small>
                     </label>
@@ -74,7 +77,7 @@
             <!-- ***** CONFIG FRACTIONS ***** -->
             <div id="config-frac" class="hidden">
                 <h2>Paramètres Fractions</h2>
-                
+
                 <h3>Opérations</h3>
                 <div class="chk-group">
                     <label><input type="checkbox" id="frac-op-add" checked> Addition</label>
@@ -92,25 +95,29 @@
                 <div id="frac-fixed-range" class="hidden">
                     <h4>Range fixe</h4>
                     <p class="range-explain">Le numérateur et le dénominateur seront inférieurs au Max.</p>
-                    <div class="form-group"><label>Max (Num/Dén) :</label><input type="number" id="frac-fixed-max" value="10"></div>
+                    <div class="form-group"><label>Max (Num/Dén) :</label><input type="number" id="frac-fixed-max"
+                            value="10"></div>
                 </div>
 
                 <div id="frac-dynamic-range">
                     <h4>Range dynamique</h4>
-                    <p class="range-explain">Les fractions deviennent plus complexes (plus grands nombres) à chaque réussite.</p>
-                    <div class="form-group"><label>Max départ :</label><input type="number" id="frac-dyn-max" value="4"></div>
-                    <div class="form-group"><label>Plafond :</label><input type="number" id="frac-dyn-cap" value="20"></div>
+                    <p class="range-explain">Les fractions deviennent plus complexes (plus grands nombres) à chaque
+                        réussite.</p>
+                    <div class="form-group"><label>Max départ :</label><input type="number" id="frac-dyn-max" value="4">
+                    </div>
+                    <div class="form-group"><label>Plafond :</label><input type="number" id="frac-dyn-cap" value="20">
+                    </div>
                 </div>
 
                 <h3>Options</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="frac-mixed"> 
+                        <input type="checkbox" id="frac-mixed">
                         Mélanger avec Entiers (50%)<br>
                         <small style="color:#666">Ex: 2 + 3/4 (Max 1 entier par calcul)</small>
                     </label>
                     <label>
-                        <input type="checkbox" id="frac-negatives"> 
+                        <input type="checkbox" id="frac-negatives">
                         Inclure nombres négatifs (50%)
                     </label>
                 </div>
@@ -119,7 +126,7 @@
             <!-- ***** CONFIG LITTERAL ***** -->
             <div id="config-lit" class="hidden">
                 <h2>Calcul Littéral</h2>
-                
+
                 <h3>Mode de Jeu</h3>
                 <div class="chk-group mode-selector">
                     <label><input type="radio" name="lit-mode" value="expand" checked> Développer / Réduire</label>
@@ -143,12 +150,12 @@
                 <h3>Type d'expressions</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="lit-type-dist-simple" checked> 
+                        <input type="checkbox" id="lit-type-dist-simple" checked>
                         Distributivité simple<br>
                         <small style="color:#666">Ex: 3(x + 2) - 5</small>
                     </label>
                     <label>
-                        <input type="checkbox" id="lit-type-dist-double" checked> 
+                        <input type="checkbox" id="lit-type-dist-double" checked>
                         Distributivité double (ou complexe)<br>
                         <small style="color:#666">
                             Développer : (x + 1)(3 - x)<br>
@@ -160,7 +167,7 @@
                 <h3>Options Communes</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="lit-use-y"> 
+                        <input type="checkbox" id="lit-use-y">
                         Inclure variable 'y'<br>
                         <small style="color:#666; display:block; margin-top:4px; line-height:1.3em;">
                             Pour équation, exprimer x en fonction de y.<br>
@@ -199,11 +206,13 @@
             </div>
 
             <h2 id="question"></h2>
-            
-            <input type="text" id="answer" inputmode="decimal" autocomplete="off" placeholder="Ta réponse...">
-            
-            <!-- Clavier Virtuel pour Littéral -->
-            <div id="virtual-keyboard" class="hidden">
+
+            <!-- NOTE: on ajoute des attributs pour mobile pour limiter corrections/auto -->
+            <input type="text" id="answer" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off"
+                spellcheck="false" placeholder="Ta réponse...">
+
+            <!-- Clavier Virtuel (utilisé pour Littéral et Fraction) -->
+            <div id="virtual-keyboard" class="hidden" aria-hidden="true">
                 <div class="kb-row">
                     <button class="key-btn" data-key="x">x</button>
                     <button class="key-btn" data-key="y">y</button>
@@ -212,12 +221,12 @@
                 <div class="kb-row">
                     <button class="key-btn" data-key="+">+</button>
                     <button class="key-btn" data-key="-">-</button>
-                    <button class="key-btn" data-key="/">/</button>
+                    <button class="key-btn" data-key="/">/</button> <!-- CHG: slash present for fractions -->
                     <button class="key-btn" data-key="(">(</button>
                     <button class="key-btn" data-key=")">)</button>
                 </div>
             </div>
-            
+
             <button id="submit-btn">Valider</button>
 
             <p id="feedback"></p>
@@ -239,7 +248,7 @@
             class Fraction {
                 constructor(n, d) {
                     if (d === 0) throw new Error("Division par zéro");
-                    if (d < 0) { n = -n; d = -d; } 
+                    if (d < 0) { n = -n; d = -d; }
                     this.n = n; this.d = d;
                 }
                 simplify() {
@@ -280,7 +289,7 @@
                 constructor() { this.terms = []; }
                 static fromTerm(c, xDeg, yDeg) {
                     let p = new Poly();
-                    p.terms.push({c: c, x: xDeg, y: yDeg});
+                    p.terms.push({ c: c, x: xDeg, y: yDeg });
                     return p;
                 }
                 add(other) {
@@ -289,10 +298,10 @@
                     let map = {};
                     allTerms.forEach(t => {
                         let key = `x${t.x}y${t.y}`;
-                        if (!map[key]) map[key] = {c:0, x:t.x, y:t.y};
+                        if (!map[key]) map[key] = { c: 0, x: t.x, y: t.y };
                         map[key].c += t.c;
                     });
-                    for(let k in map) if (map[k].c !== 0) res.terms.push(map[k]);
+                    for (let k in map) if (map[k].c !== 0) res.terms.push(map[k]);
                     return res;
                 }
                 multiply(other) {
@@ -316,15 +325,15 @@
                     this.terms.forEach((t, i) => {
                         let coeff = t.c;
                         let sign = coeff >= 0 ? "+" : "-";
-                        if (i === 0 && coeff >= 0) sign = ""; 
+                        if (i === 0 && coeff >= 0) sign = "";
                         if (i > 0 && coeff >= 0) sign = " + ";
                         if (i > 0 && coeff < 0) sign = " - ";
                         if (i === 0 && coeff < 0) sign = "-";
                         let absC = Math.abs(coeff);
                         let hasVars = t.x > 0 || t.y > 0;
                         let valStr = (absC === 1 && hasVars) ? "" : absC;
-                        let xStr = t.x === 0 ? "" : (t.x === 1 ? "x" : (t.x===2 ? "x²" : "x^"+t.x));
-                        let yStr = t.y === 0 ? "" : (t.y === 1 ? "y" : (t.y===2 ? "y²" : "y^"+t.y));
+                        let xStr = t.x === 0 ? "" : (t.x === 1 ? "x" : (t.x === 2 ? "x²" : "x^" + t.x));
+                        let yStr = t.y === 0 ? "" : (t.y === 1 ? "y" : (t.y === 2 ? "y²" : "y^" + t.y));
                         s += sign + valStr + xStr + yStr;
                     });
                     return s;
@@ -336,18 +345,17 @@
 
             function reset() {
                 state = {
-                    gameType: 'int', 
+                    gameType: 'int',
                     ops: [],
-                    intMin: 0, intMax: 0, intNeg: false, intMode:'fixed', intInc: 0, intCap: 0,
-                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true, 
-                    fracMode:'dynamic', fracCap: 0,
+                    intMin: 0, intMax: 0, intNeg: false, intMode: 'fixed', intInc: 0, intCap: 0,
+                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true,
+                    fracMode: 'dynamic', fracCap: 0,
                     litMode: 'expand', litTypes: [], litUseY: false,
                     index: 0, total: 0, unlimited: false, score: 0, current: null
                 };
             }
 
             // --- LITTÉRAL GENERATORS ---
-            
             function genLitTerm(allowVarY, maxDeg = 1) {
                 let c = rand(1, 5);
                 if (Math.random() < 0.5) c = -c;
@@ -355,36 +363,35 @@
                 if (allowVarY) options.push(2);
                 let type = options[rand(0, options.length - 1)];
                 if (maxDeg === 0) type = 0;
-                if (type === 0) return Poly.fromTerm(c, 0, 0); 
-                if (type === 1) return Poly.fromTerm(c, 1, 0); 
-                return Poly.fromTerm(c, 0, 1); 
+                if (type === 0) return Poly.fromTerm(c, 0, 0);
+                if (type === 1) return Poly.fromTerm(c, 1, 0);
+                return Poly.fromTerm(c, 0, 1);
             }
 
             function group(p1, p2) {
                 return {
                     poly: p1.add(p2),
-                    str: "(" + p1.toString() + (p2.terms.length > 0 && p2.terms[0].c >=0 ? "+" : "") + p2.toString() + ")"
+                    str: "(" + p1.toString() + (p2.terms.length > 0 && p2.terms[0].c >= 0 ? "+" : "") + p2.toString() + ")"
                 };
             }
             function polyToQ(p) { return p.toString().replace(/\s/g, ''); }
 
             function genLitExpression() {
-                // Pour "Développer"
                 let safety = 0;
-                while(safety++ < 20) {
+                while (safety++ < 20) {
                     let type = state.litTypes[rand(0, state.litTypes.length - 1)];
                     let allowY = state.litUseY;
                     let A = genLitTerm(allowY);
                     let B = genLitTerm(allowY);
                     let C = genLitTerm(allowY);
-                    let D = genLitTerm(allowY); 
-                    
+                    let D = genLitTerm(allowY);
+
                     let hasVar = [A, B, C].some(p => p.terms.some(t => t.x > 0 || t.y > 0));
                     let question = "";
                     let correctPoly = null;
 
                     if (type === 'dist-simple') {
-                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue; 
+                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue;
                         let grp = group(B, C);
                         question = `${polyToQ(A)}${grp.str}`;
                         if (D.terms.length > 0) {
@@ -395,8 +402,6 @@
                         }
                         correctPoly = A.multiply(grp.poly).add(D);
                     } else {
-                        // Double Distributivity
-                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue;
                         let g1 = group(A, B);
                         let g2 = group(C, D);
                         question = `${g1.str}${g2.str}`;
@@ -405,43 +410,43 @@
                     question = question.replace(/\+\-/g, '- ').replace(/\(\+/g, '(');
                     return { q: "Développer :<br>" + question, ans: correctPoly, display: correctPoly.toString() };
                 }
-                let x = Poly.fromTerm(1,1,0); return { q: "2(x+1)", ans: x, display: "2x+2" };
+                let x = Poly.fromTerm(1, 1, 0); return { q: "2(x+1)", ans: x, display: "2x+2" };
             }
 
             function genLitEquation() {
                 let allowY = state.litUseY;
-                let type = state.litTypes[rand(0, state.litTypes.length - 1)]; // dist-simple ou dist-double
+                let type = state.litTypes[rand(0, state.litTypes.length - 1)];
                 let blocks = (type === 'dist-double') ? 2 : 1;
 
-                let totalLHS = new Poly(); 
+                let totalLHS = new Poly();
                 let questionParts = [];
                 let totalXCoeff = 0;
-                
+
                 let safety = 0;
-                while(safety++ < 50) {
+                while (safety++ < 50) {
                     totalLHS = new Poly();
                     questionParts = [];
                     totalXCoeff = 0;
 
-                    for(let i=0; i<blocks; i++) {
+                    for (let i = 0; i < blocks; i++) {
                         let a = rand(1, 5) * (Math.random() < 0.5 ? -1 : 1);
                         let b = rand(1, 5) * (Math.random() < 0.5 ? -1 : 1);
-                        
+
                         let strA = (a === 1 ? "" : (a === -1 ? "-" : a));
                         let strB = (b >= 0 ? "+" + b : b);
                         let blockStr = `${strA}(x ${strB})`;
-                        
+
                         if (i > 0 && a >= 0) blockStr = "+ " + blockStr;
                         if (i > 0 && a < 0) blockStr = blockStr.replace("-", "- ");
-                        
+
                         questionParts.push(blockStr);
 
                         let pA = Poly.fromTerm(a, 1, 0); // ax
-                        let pAB = Poly.fromTerm(a*b, 0, 0); // constant
+                        let pAB = Poly.fromTerm(a * b, 0, 0); // constant
                         totalLHS = totalLHS.add(pA).add(pAB);
                         totalXCoeff += a;
                     }
-                    if (totalXCoeff !== 0) break; 
+                    if (totalXCoeff !== 0) break;
                 }
 
                 let polyY = Poly.fromTerm(0, 0, 0);
@@ -468,8 +473,6 @@
 
                 let finalPoly = totalLHS.add(polyY).add(polyD);
 
-                // --- CALCUL DE LA RÉPONSE FORMATÉE ---
-                // on a Ax + By + C = 0 -> x = -By/A - C/A
                 let A = 0, B = 0, C = 0;
                 finalPoly.terms.forEach(t => {
                     if (t.x === 1 && t.y === 0) A = t.c;
@@ -478,15 +481,13 @@
                 });
 
                 let solParts = [];
-                // Partie Y
                 if (B !== 0) {
                     let fY = new Fraction(-B, A).simplify();
                     let sY = fY.toString();
-                    if (sY === "1") sY = "";         
-                    else if (sY === "-1") sY = "-";  
+                    if (sY === "1") sY = "";
+                    else if (sY === "-1") sY = "-";
                     solParts.push(sY + "y");
                 }
-                // Partie Constante
                 if (C !== 0) {
                     let fC = new Fraction(-C, A).simplify();
                     let sC = fC.toString();
@@ -502,7 +503,7 @@
 
                 return {
                     q: "Résoudre pour x :<br>" + questionStr,
-                    ans: finalPoly, 
+                    ans: finalPoly,
                     display: solutionStr
                 };
             }
@@ -510,9 +511,9 @@
             // --- EVALUATION ---
             function evaluateString(str, xVal, yVal) {
                 str = str.replace(/²/g, '^2').replace(/\^/g, '**');
-                str = str.replace(/(\d)([a-zA-Z(])/g, '$1*$2'); 
-                str = str.replace(/([a-zA-Z])([a-zA-Z(])/g, '$1*$2'); 
-                str = str.replace(/(\))([a-zA-Z0-9(])/g, '$1*$2'); 
+                str = str.replace(/(\d)([a-zA-Z(])/g, '$1*$2');
+                str = str.replace(/([a-zA-Z])([a-zA-Z(])/g, '$1*$2');
+                str = str.replace(/(\))([a-zA-Z0-9(])/g, '$1*$2');
                 str = str.split('x').join(`(${xVal})`);
                 str = str.split('y').join(`(${yVal})`);
                 try {
@@ -542,6 +543,7 @@
             // --- GAME ---
             function nextQuestion() {
                 if (!state.unlimited && state.index >= state.total) {
+                    // NOTE: alert will hide keyboard; keep it only for end-session.
                     alert("Session terminée ! Score : " + state.score + " / " + state.total);
                     backToMenu();
                     return;
@@ -551,7 +553,8 @@
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
                 qs("#answer").value = "";
-                qs("#answer").focus();
+                // IMPORTANT: we will focus *after* DOM changes to keep keyboard visible on mobile
+                // (focus called a bit later)
                 qs("#progress").textContent = state.unlimited ? "Q: " + state.index : `Q: ${state.index} / ${state.total}`;
                 qs("#score").textContent = "Score: " + state.score;
 
@@ -566,55 +569,67 @@
                         state.current = { q: data.q, correct: data.ans, display: data.display, mode: 'solve' };
                     }
                     qs("#question").innerHTML = state.current.q;
-                
                 } else if (state.gameType === 'frac') {
-                    qs("#virtual-keyboard").classList.add("hidden");
+                    // CHG: show virtual keyboard for fraction mode so user can use the "/" button
+                    qs("#virtual-keyboard").classList.remove("hidden");
                     let f1 = genFrac(), f2 = genFrac();
-                    if (state.fracMixed && Math.random()<0.3) { if(Math.random()<0.5) f1.d=1; else f2.d=1; }
-                    let op = state.ops[rand(0, state.ops.length-1)];
+                    if (state.fracMixed && Math.random() < 0.3) { if (Math.random() < 0.5) f1.d = 1; else f2.d = 1; }
+                    let op = state.ops[rand(0, state.ops.length - 1)];
                     let res, sign;
-                    if(op==='add'){ res=f1.add(f2); sign='+'; }
-                    else if(op==='sub'){ res=f1.sub(f2); sign='-'; }
-                    else if(op==='mul'){ res=f1.mul(f2); sign='×'; }
-                    else { if(f2.n===0) f2.n=1; res=f1.div(f2); sign='÷'; }
-                    const fmt = f => (f.n<0 || (f.n>0 && f.d<0)) ? `(${f.toString()})` : f.toString();
+                    if (op === 'add') { res = f1.add(f2); sign = '+'; }
+                    else if (op === 'sub') { res = f1.sub(f2); sign = '-'; }
+                    else if (op === 'mul') { res = f1.mul(f2); sign = '×'; }
+                    else { if (f2.n === 0) f2.n = 1; res = f1.div(f2); sign = '÷'; }
+                    const fmt = f => (f.n < 0 || (f.n > 0 && f.d < 0)) ? `(${f.toString()})` : f.toString();
                     state.current = { correct: res, display: res.toString() };
                     qs("#question").innerHTML = `${fmt(f1)} ${sign} ${fmt(f2)} = ?`;
                     qs("#range-info").textContent = "Range Max: " + state.fracMax;
                 } else {
                     qs("#virtual-keyboard").classList.add("hidden");
                     let v1 = genInt(), v2 = genInt();
-                    let op = state.ops[rand(0, state.ops.length-1)];
+                    let op = state.ops[rand(0, state.ops.length - 1)];
                     let res, sign;
-                    if(op==='add'){ res=v1+v2; sign='+'; }
-                    else if(op==='sub'){ res=v1-v2; sign='-'; }
-                    else { res=v1*v2; sign='×'; }
-                    const fmt = n => n<0 ? `(${n})` : n;
+                    if (op === 'add') { res = v1 + v2; sign = '+'; }
+                    else if (op === 'sub') { res = v1 - v2; sign = '-'; }
+                    else { res = v1 * v2; sign = '×'; }
+                    const fmt = n => n < 0 ? `(${n})` : n;
                     state.current = { correct: res, display: res };
                     qs("#question").innerHTML = `${fmt(v1)} ${sign} ${fmt(v2)} = ?`;
                     qs("#range-info").textContent = "Range: " + state.intMin + "-" + state.intMax;
                 }
+
+                // CHG: robust focus to keep mobile keyboard visible.
+                // First immediate focus (helps desktop), then a delayed focus (helps mobile where layout changes can hide the keyboard).
+                const answerInput = qs("#answer");
+                try { answerInput.focus({ preventScroll: true }); } catch (e) { answerInput.focus(); }
+                // set caret at end
+                answerInput.setSelectionRange(answerInput.value.length, answerInput.value.length);
+                // delayed focus to keep keyboard stable on mobile
+                setTimeout(() => {
+                    try { answerInput.focus({ preventScroll: true }); } catch (e) { answerInput.focus(); }
+                    answerInput.setSelectionRange(answerInput.value.length, answerInput.value.length);
+                }, 120);
             }
 
-            function genInt() { 
+            function genInt() {
                 let v = rand(state.intMin, state.intMax);
                 if (state.intNeg && Math.random() < 0.5) v = -v;
                 return v;
             }
             function genFrac() {
-                let s=0; while(s++<50) {
-                    let n=rand(1, state.fracMax), d=rand(2, state.fracMax);
-                    if(n%d===0) continue;
-                    if(state.fracNeg && Math.random()<0.5) n=-n;
-                    let f = new Fraction(n,d);
-                    if(state.fracSimplify) f = f.simplify(); // Génère question simplifiée
+                let s = 0; while (s++ < 50) {
+                    let n = rand(1, state.fracMax), d = rand(2, state.fracMax);
+                    if (n % d === 0) continue;
+                    if (state.fracNeg && Math.random() < 0.5) n = -n;
+                    let f = new Fraction(n, d);
+                    if (state.fracSimplify) f = f.simplify(); // Génère question simplifiée
                     return f;
-                } return new Fraction(1,2);
+                } return new Fraction(1, 2);
             }
 
             function submit() {
                 let input = qs("#answer").value.replace(/\s+/g, '').toLowerCase();
-                if(!input) return;
+                if (!input) return;
 
                 let isCorrect = false;
                 let feedback = "";
@@ -651,23 +666,23 @@
                             } else {
                                 let result = evaluatePolyObj(state.current.correct, userX, ty);
                                 let result2 = evaluatePolyObj(state.current.correct, userX2, ty2);
-                                
+
                                 if (Math.abs(result) < 0.001 && Math.abs(result2) < 0.001) {
                                     isCorrect = true;
                                 }
                             }
                         }
                     }
-                } 
+                }
                 else if (state.gameType === 'frac') {
                     let userF = Fraction.parse(input);
                     if (userF && state.current.correct.equals(input)) {
                         if (userF.n !== state.current.correct.n) {
-                             feedback = "Juste, mais simplifie !";
-                             qs("#feedback").style.color = "orange";
+                            feedback = "Juste, mais simplifie !";
+                            qs("#feedback").style.color = "orange";
                         } else isCorrect = true;
                     }
-                } 
+                }
                 else {
                     if (Number(input) === state.current.correct) isCorrect = true;
                 }
@@ -676,8 +691,8 @@
                     state.score++;
                     qs("#feedback").textContent = "Correct !";
                     qs("#feedback").style.color = "green";
-                    if(state.gameType==='int' && state.intMode==='dynamic') state.intMax = Math.min(state.intMax+state.intInc, state.intCap);
-                    if(state.gameType==='frac' && state.fracMode==='dynamic') state.fracMax = Math.min(state.fracMax+1, state.fracCap);
+                    if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.intInc, state.intCap);
+                    if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + 1, state.fracCap);
                     setTimeout(nextQuestion, 600);
                 } else {
                     if (!feedback) feedback = "Faux, réessaie.";
@@ -695,52 +710,51 @@
 
             qs("#start-btn").onclick = () => {
                 reset();
-                if(qs("#tab-int").classList.contains("active")) state.gameType='int';
-                else if(qs("#tab-frac").classList.contains("active")) state.gameType='frac';
-                else state.gameType='lit';
+                if (qs("#tab-int").classList.contains("active")) state.gameType = 'int';
+                else if (qs("#tab-frac").classList.contains("active")) state.gameType = 'frac';
+                else state.gameType = 'lit';
 
                 let qm = document.querySelector('input[name="qmode"]:checked').value;
-                state.unlimited = (qm==='unlimited');
+                state.unlimited = (qm === 'unlimited');
                 state.total = Number(qs("#num-questions").value);
 
-                if(state.gameType==='int') {
+                if (state.gameType === 'int') {
                     state.ops = [];
-                    if(qs("#int-op-add").checked) state.ops.push('add');
-                    if(qs("#int-op-sub").checked) state.ops.push('sub');
-                    if(qs("#int-op-mul").checked) state.ops.push('mul');
-                    if(!state.ops.length) return alert("Choisis une opération");
+                    if (qs("#int-op-add").checked) state.ops.push('add');
+                    if (qs("#int-op-sub").checked) state.ops.push('sub');
+                    if (qs("#int-op-mul").checked) state.ops.push('mul');
+                    if (!state.ops.length) return alert("Choisis une opération");
                     state.intNeg = qs("#int-negatives").checked;
                     state.intMode = document.querySelector('input[name="int-range-mode"]:checked').value;
-                    if(state.intMode==='fixed') {
+                    if (state.intMode === 'fixed') {
                         state.intMin = Number(qs("#int-fixed-min").value);
                         state.intMax = Number(qs("#int-fixed-max").value);
                     } else {
-                        state.intMin = Number(qs("#int-dyn-max").value) > 10 ? 2 : 2;
+                        state.intMin = 2;
                         state.intMax = Number(qs("#int-dyn-max").value);
                         state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value);
                     }
-                } 
-                else if(state.gameType==='frac') {
+                }
+                else if (state.gameType === 'frac') {
                     state.ops = [];
-                    if(qs("#frac-op-add").checked) state.ops.push('add');
-                    if(qs("#frac-op-sub").checked) state.ops.push('sub');
-                    if(qs("#frac-op-mul").checked) state.ops.push('mul');
-                    if(qs("#frac-op-div").checked) state.ops.push('div');
-                    if(!state.ops.length) return alert("Choisis une opération");
+                    if (qs("#frac-op-add").checked) state.ops.push('add');
+                    if (qs("#frac-op-sub").checked) state.ops.push('sub');
+                    if (qs("#frac-op-mul").checked) state.ops.push('mul');
+                    if (qs("#frac-op-div").checked) state.ops.push('div');
+                    if (!state.ops.length) return alert("Choisis une opération");
                     state.fracMode = document.querySelector('input[name="frac-range-mode"]:checked').value;
                     state.fracMixed = qs("#frac-mixed").checked;
                     state.fracNeg = qs("#frac-negatives").checked;
-                    // Simplification toujours true
-                    if(state.fracMode==='fixed') state.fracMax = Number(qs("#frac-fixed-max").value);
+                    if (state.fracMode === 'fixed') state.fracMax = Number(qs("#frac-fixed-max").value);
                     else { state.fracMax = Number(qs("#frac-dyn-max").value); state.fracCap = Number(qs("#frac-dyn-cap").value); }
                 }
                 else {
                     state.litMode = document.querySelector('input[name="lit-mode"]:checked').value;
                     state.litUseY = qs("#lit-use-y").checked;
                     state.litTypes = [];
-                    if(qs("#lit-type-dist-simple").checked) state.litTypes.push('dist-simple');
-                    if(qs("#lit-type-dist-double").checked) state.litTypes.push('dist-double');
-                    if(!state.litTypes.length) return alert("Choisis un type d'expression");
+                    if (qs("#lit-type-dist-simple").checked) state.litTypes.push('dist-simple');
+                    if (qs("#lit-type-dist-double").checked) state.litTypes.push('dist-double');
+                    if (!state.litTypes.length) return alert("Choisis un type d'expression");
                 }
                 qs("#config").classList.add("hidden");
                 qs("#main-nav").classList.add("hidden");
@@ -757,7 +771,8 @@
                     let text = input.value;
                     input.value = text.substring(0, start) + val + text.substring(end);
                     input.selectionStart = input.selectionEnd = start + val.length;
-                    input.focus();
+                    // CHG: refocus after inserting to keep mobile keyboard visible
+                    try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
                 };
             });
 
@@ -774,26 +789,26 @@
             };
 
             ['int', 'frac', 'lit'].forEach(t => {
-                qs("#tab-"+t).onclick = () => {
+                qs("#tab-" + t).onclick = () => {
                     ['int', 'frac', 'lit'].forEach(x => {
-                        qs("#tab-"+x).classList.remove("active");
-                        qs("#config-"+x).classList.add("hidden");
+                        qs("#tab-" + x).classList.remove("active");
+                        qs("#config-" + x).classList.add("hidden");
                     });
-                    qs("#tab-"+t).classList.add("active");
-                    qs("#config-"+t).classList.remove("hidden");
-                    if(t === 'int' || t === 'frac') updateRangesUI(t);
+                    qs("#tab-" + t).classList.add("active");
+                    qs("#config-" + t).classList.remove("hidden");
+                    if (t === 'int' || t === 'frac') updateRangesUI(t);
                 }
             });
 
             function updateRangesUI(type) {
                 let mode = document.querySelector(`input[name="${type}-range-mode"]:checked`).value;
-                if(mode==='fixed') { qs(`#${type}-fixed-range`).classList.remove("hidden"); qs(`#${type}-dynamic-range`).classList.add("hidden"); } 
+                if (mode === 'fixed') { qs(`#${type}-fixed-range`).classList.remove("hidden"); qs(`#${type}-dynamic-range`).classList.add("hidden"); }
                 else { qs(`#${type}-fixed-range`).classList.add("hidden"); qs(`#${type}-dynamic-range`).classList.remove("hidden"); }
             }
 
             document.querySelectorAll('input[name="int-range-mode"]').forEach(r => r.addEventListener("change", () => updateRangesUI('int')));
             document.querySelectorAll('input[name="frac-range-mode"]').forEach(r => r.addEventListener("change", () => updateRangesUI('frac')));
-            
+
             document.querySelectorAll('input[name="lit-mode"]').forEach(r => {
                 r.addEventListener("change", () => {
                     if (r.value === 'expand') {
@@ -811,4 +826,5 @@
         })();
     </script>
 </body>
+
 </html>
