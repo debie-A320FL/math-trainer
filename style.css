@@ -85,14 +85,22 @@ button:hover {
 #virtual-keyboard {
     margin: 10px 0;
 }
+.kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
 .key-btn {
-    padding: 8px 14px;
+    padding: 10px;
+    min-width: 40px;
     background: #e9ecef;
     font-weight: bold;
     font-family: monospace;
     font-size: 1.2em;
     border: 1px solid #ced4da;
     box-shadow: 0 2px 0 #babbbc;
+    margin: 2px;
 }
 .key-btn:active {
     box-shadow: none;
@@ -177,7 +185,7 @@ h4 { margin: 10px 0; color: #666; }
     font-size: 1.8em;
     margin: 20px 0;
     color: #222;
-    word-break: break-word; /* Pour les longues équations */
+    line-height: 1.4;
 }
 
 #feedback {

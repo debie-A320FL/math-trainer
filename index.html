@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>Math Trainer</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,37 +28,53 @@
             <!-- ***** CONFIG ENTIERS ***** -->
             <div id="config-int">
                 <h2>Paramètres Entiers</h2>
+                
                 <h3>Opérations</h3>
                 <div class="chk-group">
                     <label><input type="checkbox" id="int-op-add" checked> Addition</label>
                     <label><input type="checkbox" id="int-op-sub" checked> Soustraction</label>
                     <label><input type="checkbox" id="int-op-mul" checked> Multiplication</label>
                 </div>
+
                 <h3>Type de Range</h3>
                 <div class="chk-group">
                     <label><input type="radio" name="int-range-mode" value="fixed" checked> Range fixe</label>
                     <label><input type="radio" name="int-range-mode" value="dynamic"> Range dynamique</label>
                 </div>
+
                 <div id="int-fixed-range">
                     <h4>Range fixe</h4>
-                    <p class="range-explain">Min/Max inclus.</p>
+                    <p class="range-explain">
+                        Nombres choisis aléatoirement entre <strong>Min</strong> et <strong>Max</strong> inclus.<br>
+                        <span style="font-size:0.9em; color:#555">Ex: Min 2, Max 10 &rarr; 3, 7, 9...</span>
+                    </p>
                     <div class="form-group"><label>Min :</label><input type="number" id="int-fixed-min" value="2"></div>
                     <div class="form-group"><label>Max :</label><input type="number" id="int-fixed-max" value="10"></div>
                 </div>
+
                 <div id="int-dynamic-range" class="hidden">
                     <h4>Range dynamique</h4>
+                    <p class="range-explain">
+                        La difficulté (Max) augmente automatiquement à chaque bonne réponse.
+                    </p>
                     <div class="form-group"><label>Départ :</label><input type="number" id="int-dyn-max" value="10"></div>
                     <div class="form-group"><label>Plafond :</label><input type="number" id="int-dyn-cap" value="100"></div>
                 </div>
+
                 <h3>Options</h3>
                 <div class="chk-group">
-                    <label><input type="checkbox" id="int-negatives"> Inclure négatifs (50%)</label>
+                    <label>
+                        <input type="checkbox" id="int-negatives"> 
+                        Inclure nombres négatifs (50%)
+                        <br><small style="color:#666">Le nombre peut être -5 comme 5.</small>
+                    </label>
                 </div>
             </div>
 
             <!-- ***** CONFIG FRACTIONS ***** -->
             <div id="config-frac" class="hidden">
                 <h2>Paramètres Fractions</h2>
+                
                 <h3>Opérations</h3>
                 <div class="chk-group">
                     <label><input type="checkbox" id="frac-op-add" checked> Addition</label>
@@ -66,56 +82,93 @@
                     <label><input type="checkbox" id="frac-op-mul" checked> Multiplication</label>
                     <label><input type="checkbox" id="frac-op-div"> Division</label>
                 </div>
+
                 <h3>Type de Range</h3>
                 <div class="chk-group">
                     <label><input type="radio" name="frac-range-mode" value="fixed"> Range fixe</label>
                     <label><input type="radio" name="frac-range-mode" value="dynamic" checked> Range dynamique</label>
                 </div>
+
                 <div id="frac-fixed-range" class="hidden">
                     <h4>Range fixe</h4>
+                    <p class="range-explain">Le numérateur et le dénominateur seront inférieurs au Max.</p>
                     <div class="form-group"><label>Max (Num/Dén) :</label><input type="number" id="frac-fixed-max" value="10"></div>
                 </div>
+
                 <div id="frac-dynamic-range">
                     <h4>Range dynamique</h4>
+                    <p class="range-explain">Les fractions deviennent plus complexes (plus grands nombres) à chaque réussite.</p>
                     <div class="form-group"><label>Max départ :</label><input type="number" id="frac-dyn-max" value="4"></div>
                     <div class="form-group"><label>Plafond :</label><input type="number" id="frac-dyn-cap" value="20"></div>
                 </div>
+
                 <h3>Options</h3>
                 <div class="chk-group">
-                    <label><input type="checkbox" id="frac-simplify"> Simplifier réponse</label>
-                    <label><input type="checkbox" id="frac-mixed"> Mélanger avec Entiers</label>
-                    <label><input type="checkbox" id="frac-negatives"> Inclure négatifs (50%)</label>
+                    <label>
+                        <input type="checkbox" id="frac-mixed"> 
+                        Mélanger avec Entiers (50%)<br>
+                        <small style="color:#666">Ex: 2 + 3/4 (Max 1 entier par calcul)</small>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="frac-negatives"> 
+                        Inclure nombres négatifs (50%)
+                    </label>
                 </div>
             </div>
 
             <!-- ***** CONFIG LITTERAL ***** -->
             <div id="config-lit" class="hidden">
                 <h2>Calcul Littéral</h2>
-                <p class="range-explain">Développer et Réduire.</p>
+                
+                <h3>Mode de Jeu</h3>
+                <div class="chk-group mode-selector">
+                    <label><input type="radio" name="lit-mode" value="expand" checked> Développer / Réduire</label>
+                    <label><input type="radio" name="lit-mode" value="solve"> Résoudre Équation (Trouver x)</label>
+                </div>
+
+                <!-- Zone de description dynamique -->
+                <div id="desc-expand">
+                    <p class="range-explain">
+                        <strong>Objectif :</strong> Développer l'expression.<br>
+                        Ex: 3(x+2) &rarr; Réponse attendue : 3x+6
+                    </p>
+                </div>
+                <div id="desc-solve" class="hidden">
+                    <p class="range-explain">
+                        <strong>Objectif :</strong> Isoler x (équations du 1er degré).<br>
+                        Ex: 2x + 4 = 0 &rarr; Réponse : x = -2 (ou juste -2)
+                    </p>
+                </div>
 
                 <h3>Type d'expressions</h3>
                 <div class="chk-group">
                     <label>
                         <input type="checkbox" id="lit-type-dist-simple" checked> 
-                        Distributivité simple + terme<br>
+                        Distributivité simple<br>
                         <small style="color:#666">Ex: 3(x + 2) - 5</small>
                     </label>
                     <label>
                         <input type="checkbox" id="lit-type-dist-double" checked> 
-                        Distributivité double<br>
-                        <small style="color:#666">Ex: (x + 1)(3 - x)</small>
+                        Distributivité double (ou complexe)<br>
+                        <small style="color:#666">
+                            Développer : (x + 1)(3 - x)<br>
+                            Équation : 2(x + 1) + 3(x - 2) = 0
+                        </small>
                     </label>
                 </div>
 
-                <h3>Options</h3>
+                <h3>Options Communes</h3>
                 <div class="chk-group">
                     <label>
                         <input type="checkbox" id="lit-use-y"> 
                         Inclure variable 'y'<br>
-                        <small style="color:#666">Ex: (x - 2)(y + 3)</small>
+                        <small style="color:#666; display:block; margin-top:4px; line-height:1.3em;">
+                            Pour équation, exprimer x en fonction de y.<br>
+                            Ex: 3x + 2y + 1 = 0 &rarr; x = -1/3 - 2/3y
+                        </small>
                     </label>
                 </div>
-                <p class="help">Coefficients entre 1 et 5 (50% négatifs).</p>
+                <p class="help">Coefficients entre 1 et 5.</p>
             </div>
 
             <hr>
@@ -147,15 +200,22 @@
 
             <h2 id="question"></h2>
             
-            <input type="text" id="answer" autocomplete="off" placeholder="Ta réponse...">
+            <input type="text" id="answer" inputmode="decimal" autocomplete="off" placeholder="Ta réponse...">
             
             <!-- Clavier Virtuel pour Littéral -->
             <div id="virtual-keyboard" class="hidden">
-                <button class="key-btn" data-key="x">x</button>
-                <button class="key-btn" data-key="y">y</button>
-                <button class="key-btn" data-key="²">²</button>
-                <button class="key-btn" data-key="+">+</button>
-                <button class="key-btn" data-key="-">-</button>
+                <div class="kb-row">
+                    <button class="key-btn" data-key="x">x</button>
+                    <button class="key-btn" data-key="y">y</button>
+                    <button class="key-btn" data-key="²">²</button>
+                </div>
+                <div class="kb-row">
+                    <button class="key-btn" data-key="+">+</button>
+                    <button class="key-btn" data-key="-">-</button>
+                    <button class="key-btn" data-key="/">/</button>
+                    <button class="key-btn" data-key="(">(</button>
+                    <button class="key-btn" data-key=")">)</button>
+                </div>
             </div>
             
             <button id="submit-btn">Valider</button>
@@ -215,83 +275,56 @@
                 }
             }
 
-            // ================= POLYNOMIALS (Calcul Littéral) =================
-            // Structure: array of terms {c: coeff, x: degreeX, y: degreeY}
+            // ================= POLYNOMIALS =================
             class Poly {
-                constructor() {
-                    this.terms = [];
-                }
-                
+                constructor() { this.terms = []; }
                 static fromTerm(c, xDeg, yDeg) {
                     let p = new Poly();
                     p.terms.push({c: c, x: xDeg, y: yDeg});
                     return p;
                 }
-
                 add(other) {
                     let res = new Poly();
-                    // Concaténer tous les termes
                     let allTerms = [...this.terms, ...other.terms];
-                    
-                    // Réduire (combiner les termes de même puissance)
                     let map = {};
                     allTerms.forEach(t => {
                         let key = `x${t.x}y${t.y}`;
                         if (!map[key]) map[key] = {c:0, x:t.x, y:t.y};
                         map[key].c += t.c;
                     });
-
-                    // Reconstruire liste
-                    for(let k in map) {
-                        if (map[k].c !== 0) res.terms.push(map[k]);
-                    }
+                    for(let k in map) if (map[k].c !== 0) res.terms.push(map[k]);
                     return res;
                 }
-
                 multiply(other) {
                     let res = new Poly();
                     this.terms.forEach(t1 => {
                         other.terms.forEach(t2 => {
-                            let newC = t1.c * t2.c;
-                            let newX = t1.x + t2.x;
-                            let newY = t1.y + t2.y;
-                            // Add to result (créer un poly temporaire et ajouter)
-                            let temp = Poly.fromTerm(newC, newX, newY);
-                            res = res.add(temp);
+                            res = res.add(Poly.fromTerm(t1.c * t2.c, t1.x + t2.x, t1.y + t2.y));
                         });
                     });
                     return res;
                 }
-
                 toString() {
                     if (this.terms.length === 0) return "0";
-                    // Trier: degré total décroissant, puis x décroissant, puis y
                     this.terms.sort((a, b) => {
-                        let degA = a.x + a.y;
-                        let degB = b.x + b.y;
+                        let degA = a.x + a.y; let degB = b.x + b.y;
                         if (degB !== degA) return degB - degA;
                         if (b.x !== a.x) return b.x - a.x;
                         return b.y - a.y;
                     });
-
                     let s = "";
                     this.terms.forEach((t, i) => {
                         let coeff = t.c;
                         let sign = coeff >= 0 ? "+" : "-";
-                        if (i === 0 && coeff >= 0) sign = ""; // Pas de + au début
+                        if (i === 0 && coeff >= 0) sign = ""; 
                         if (i > 0 && coeff >= 0) sign = " + ";
                         if (i > 0 && coeff < 0) sign = " - ";
                         if (i === 0 && coeff < 0) sign = "-";
-
                         let absC = Math.abs(coeff);
-                        let valStr = absC === 1 && (t.x > 0 || t.y > 0) ? "" : absC; // 1x devient x
-                        
-                        let xStr = t.x === 0 ? "" : (t.x === 1 ? "x" : "x²"); // Support limité à ^2 pour l'affichage simple
-                        if(t.x > 2) xStr = "x^" + t.x;
-                        
-                        let yStr = t.y === 0 ? "" : (t.y === 1 ? "y" : "y²");
-                        if(t.y > 2) yStr = "y^" + t.y;
-
+                        let hasVars = t.x > 0 || t.y > 0;
+                        let valStr = (absC === 1 && hasVars) ? "" : absC;
+                        let xStr = t.x === 0 ? "" : (t.x === 1 ? "x" : (t.x===2 ? "x²" : "x^"+t.x));
+                        let yStr = t.y === 0 ? "" : (t.y === 1 ? "y" : (t.y===2 ? "y²" : "y^"+t.y));
                         s += sign + valStr + xStr + yStr;
                     });
                     return s;
@@ -303,290 +336,336 @@
 
             function reset() {
                 state = {
-                    gameType: 'int', // 'int', 'frac', 'lit'
+                    gameType: 'int', 
                     ops: [],
-                    
-                    // Configs...
-                    intMin: 0, intMax: 0, intNeg: false, intMode:'fixed',
-                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: false, fracMode:'dynamic',
-                    litTypes: [], litUseY: false,
-                    
-                    // Dynamic
-                    intInc: 0, intCap: 0,
-                    fracCap: 0,
-
-                    // Global
+                    intMin: 0, intMax: 0, intNeg: false, intMode:'fixed', intInc: 0, intCap: 0,
+                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true, 
+                    fracMode:'dynamic', fracCap: 0,
+                    litMode: 'expand', litTypes: [], litUseY: false,
                     index: 0, total: 0, unlimited: false, score: 0, current: null
                 };
             }
 
             // --- LITTÉRAL GENERATORS ---
             
-            function genLitTerm(allowVarY) {
-                // Génère un terme de type: a, ax, ay. (Coeff 1-5, signe 50%)
+            function genLitTerm(allowVarY, maxDeg = 1) {
                 let c = rand(1, 5);
                 if (Math.random() < 0.5) c = -c;
-
-                let type = rand(0, 2); // 0: entier, 1: x, 2: y (si activé)
-                if (!allowVarY && type === 2) type = rand(0, 1);
-
-                // Retourne un objet Poly
-                if (type === 0) return Poly.fromTerm(c, 0, 0); // c
-                if (type === 1) return Poly.fromTerm(c, 1, 0); // cx
-                return Poly.fromTerm(c, 0, 1); // cy
+                let options = [0, 1];
+                if (allowVarY) options.push(2);
+                let type = options[rand(0, options.length - 1)];
+                if (maxDeg === 0) type = 0;
+                if (type === 0) return Poly.fromTerm(c, 0, 0); 
+                if (type === 1) return Poly.fromTerm(c, 1, 0); 
+                return Poly.fromTerm(c, 0, 1); 
             }
+
+            function group(p1, p2) {
+                return {
+                    poly: p1.add(p2),
+                    str: "(" + p1.toString() + (p2.terms.length > 0 && p2.terms[0].c >=0 ? "+" : "") + p2.toString() + ")"
+                };
+            }
+            function polyToQ(p) { return p.toString().replace(/\s/g, ''); }
 
             function genLitExpression() {
-                // Choix du type de structure
-                let type = state.litTypes[rand(0, state.litTypes.length - 1)];
-                let allowY = state.litUseY;
-                
-                let A = genLitTerm(allowY);
-                let B = genLitTerm(allowY);
-                let C = genLitTerm(allowY);
-                
-                // Formatage "Joli" pour la question (avec parenthèses)
-                const polyToQ = (p) => {
-                    let s = p.toString().replace(/\s/g, ''); // enlever espaces pour compacité
-                    // Si le terme commence par -, on le garde, sinon rien
-                    return s;
-                };
-
-                // Helper pour créer (A+B) en string et en Poly
-                const group = (p1, p2) => {
-                    return {
-                        poly: p1.add(p2),
-                        str: "(" + p1.toString() + (p2.terms[0].c >=0 ? "+" : "") + p2.toString() + ")"
-                    }
-                };
-                
-                let question = "";
-                let correctPoly = null;
-
-                if (type === 'dist-simple') {
-                    // Structure: A(B+C) + D   ou  A + (B+C)D
-                    // Simplifions: k(ax + b) + c.
-                    // A doit être simple (un monome) pour être lisible, sinon (x+1)(...) c'est double dist.
-                    // On va forcer A à être un monome (ce que genLitTerm fait).
+                // Pour "Développer"
+                let safety = 0;
+                while(safety++ < 20) {
+                    let type = state.litTypes[rand(0, state.litTypes.length - 1)];
+                    let allowY = state.litUseY;
+                    let A = genLitTerm(allowY);
+                    let B = genLitTerm(allowY);
+                    let C = genLitTerm(allowY);
+                    let D = genLitTerm(allowY); 
                     
-                    let grp = group(B, C); // (B+C)
-                    let D = genLitTerm(allowY);
+                    let hasVar = [A, B, C].some(p => p.terms.some(t => t.x > 0 || t.y > 0));
+                    let question = "";
+                    let correctPoly = null;
 
-                    if (Math.random() < 0.5) {
-                        // A(B+C) + D
+                    if (type === 'dist-simple') {
+                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue; 
+                        let grp = group(B, C);
                         question = `${polyToQ(A)}${grp.str}`;
-                        if (D.terms[0].c >= 0) question += " + " + D.toString();
-                        else question += " " + D.toString();
-                        
+                        if (D.terms.length > 0) {
+                            let dc = D.terms[0].c;
+                            let dStr = D.toString();
+                            if (dc >= 0) question += " + " + dStr;
+                            else question += " " + dStr;
+                        }
                         correctPoly = A.multiply(grp.poly).add(D);
                     } else {
-                        // A + (B+C)D -> D(B+C) + A par commutativité pour l'affichage standard
-                        // On écrit plutôt D(B+C) + A pour éviter confusion de lecture
-                        question = `${polyToQ(D)}${grp.str}`;
-                        if (A.terms[0].c >= 0) question += " + " + A.toString();
-                        else question += " " + A.toString();
-                        
-                        correctPoly = D.multiply(grp.poly).add(A);
+                        // Double Distributivity
+                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue;
+                        let g1 = group(A, B);
+                        let g2 = group(C, D);
+                        question = `${g1.str}${g2.str}`;
+                        correctPoly = g1.poly.multiply(g2.poly);
                     }
-
-                } else {
-                    // Double dist: (A+B)(C+D)
-                    let D = genLitTerm(allowY);
-                    let g1 = group(A, B);
-                    let g2 = group(C, D);
-                    
-                    question = `${g1.str}${g2.str}`;
-                    correctPoly = g1.poly.multiply(g2.poly);
+                    question = question.replace(/\+\-/g, '- ').replace(/\(\+/g, '(');
+                    return { q: "Développer :<br>" + question, ans: correctPoly, display: correctPoly.toString() };
                 }
-
-                // Nettoyage cosmétique de la question
-                question = question.replace(/\+\-/g, '- ').replace(/\(\+/g, '(');
-                return { q: question, ans: correctPoly };
+                let x = Poly.fromTerm(1,1,0); return { q: "2(x+1)", ans: x, display: "2x+2" };
             }
 
-            // --- MAIN GAME LOOP ---
+            function genLitEquation() {
+                let allowY = state.litUseY;
+                let type = state.litTypes[rand(0, state.litTypes.length - 1)]; // dist-simple ou dist-double
+                let blocks = (type === 'dist-double') ? 2 : 1;
 
+                let totalLHS = new Poly(); 
+                let questionParts = [];
+                let totalXCoeff = 0;
+                
+                let safety = 0;
+                while(safety++ < 50) {
+                    totalLHS = new Poly();
+                    questionParts = [];
+                    totalXCoeff = 0;
+
+                    for(let i=0; i<blocks; i++) {
+                        let a = rand(1, 5) * (Math.random() < 0.5 ? -1 : 1);
+                        let b = rand(1, 5) * (Math.random() < 0.5 ? -1 : 1);
+                        
+                        let strA = (a === 1 ? "" : (a === -1 ? "-" : a));
+                        let strB = (b >= 0 ? "+" + b : b);
+                        let blockStr = `${strA}(x ${strB})`;
+                        
+                        if (i > 0 && a >= 0) blockStr = "+ " + blockStr;
+                        if (i > 0 && a < 0) blockStr = blockStr.replace("-", "- ");
+                        
+                        questionParts.push(blockStr);
+
+                        let pA = Poly.fromTerm(a, 1, 0); // ax
+                        let pAB = Poly.fromTerm(a*b, 0, 0); // constant
+                        totalLHS = totalLHS.add(pA).add(pAB);
+                        totalXCoeff += a;
+                    }
+                    if (totalXCoeff !== 0) break; 
+                }
+
+                let polyY = Poly.fromTerm(0, 0, 0);
+                let partY = "";
+                if (allowY) {
+                    if (Math.random() < 0.7) {
+                        let c = rand(1, 5) * (Math.random() < 0.5 ? -1 : 1);
+                        if (c !== 0) {
+                            polyY = Poly.fromTerm(c, 0, 1);
+                            let absY = Math.abs(c);
+                            let strY = (absY === 1 ? "y" : absY + "y");
+                            partY = (c >= 0 ? "+ " + strY : "- " + strY);
+                        }
+                    }
+                }
+
+                let d = rand(1, 10) * (Math.random() < 0.5 ? -1 : 1);
+                let polyD = Poly.fromTerm(d, 0, 0);
+                let partD = (d >= 0 ? "+ " + d : "- " + Math.abs(d));
+
+                let questionStr = questionParts.join(" ");
+                questionStr += ` ${partY} ${partD} = 0`;
+                questionStr = questionStr.replace(/\s+/g, ' ').replace(/\( /g, '(');
+
+                let finalPoly = totalLHS.add(polyY).add(polyD);
+
+                // --- CALCUL DE LA RÉPONSE FORMATÉE ---
+                // on a Ax + By + C = 0 -> x = -By/A - C/A
+                let A = 0, B = 0, C = 0;
+                finalPoly.terms.forEach(t => {
+                    if (t.x === 1 && t.y === 0) A = t.c;
+                    else if (t.x === 0 && t.y === 1) B = t.c;
+                    else if (t.x === 0 && t.y === 0) C = t.c;
+                });
+
+                let solParts = [];
+                // Partie Y
+                if (B !== 0) {
+                    let fY = new Fraction(-B, A).simplify();
+                    let sY = fY.toString();
+                    if (sY === "1") sY = "";         
+                    else if (sY === "-1") sY = "-";  
+                    solParts.push(sY + "y");
+                }
+                // Partie Constante
+                if (C !== 0) {
+                    let fC = new Fraction(-C, A).simplify();
+                    let sC = fC.toString();
+                    if (solParts.length > 0) {
+                        if (fC.n >= 0) solParts.push("+ " + sC);
+                        else solParts.push("- " + sC.replace("-", ""));
+                    } else {
+                        solParts.push(sC);
+                    }
+                }
+                if (solParts.length === 0) solParts.push("0");
+                let solutionStr = "x = " + solParts.join(" ");
+
+                return {
+                    q: "Résoudre pour x :<br>" + questionStr,
+                    ans: finalPoly, 
+                    display: solutionStr
+                };
+            }
+
+            // --- EVALUATION ---
+            function evaluateString(str, xVal, yVal) {
+                str = str.replace(/²/g, '^2').replace(/\^/g, '**');
+                str = str.replace(/(\d)([a-zA-Z(])/g, '$1*$2'); 
+                str = str.replace(/([a-zA-Z])([a-zA-Z(])/g, '$1*$2'); 
+                str = str.replace(/(\))([a-zA-Z0-9(])/g, '$1*$2'); 
+                str = str.split('x').join(`(${xVal})`);
+                str = str.split('y').join(`(${yVal})`);
+                try {
+                    if (/[^0-9\+\-\*\/\(\)\.\s]/.test(str)) return NaN;
+                    return eval(str);
+                } catch (e) { return NaN; }
+            }
+
+            function evaluatePolyObj(poly, x, y) {
+                let sum = 0;
+                poly.terms.forEach(t => sum += t.c * Math.pow(x, t.x) * Math.pow(y, t.y));
+                return sum;
+            }
+
+            function hasUnsimplifiedFraction(str) {
+                let matches = str.match(/(\d+)\s*\/\s*(\d+)/g);
+                if (!matches) return false;
+                for (let m of matches) {
+                    let parts = m.split('/');
+                    let n = parseInt(parts[0]);
+                    let d = parseInt(parts[1]);
+                    if (d !== 0 && gcd(n, d) > 1) return true;
+                }
+                return false;
+            }
+
+            // --- GAME ---
             function nextQuestion() {
                 if (!state.unlimited && state.index >= state.total) {
                     alert("Session terminée ! Score : " + state.score + " / " + state.total);
                     backToMenu();
                     return;
                 }
-
                 state.index++;
                 qs("#feedback").textContent = "";
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
                 qs("#answer").value = "";
                 qs("#answer").focus();
-
-                // UI Update
                 qs("#progress").textContent = state.unlimited ? "Q: " + state.index : `Q: ${state.index} / ${state.total}`;
                 qs("#score").textContent = "Score: " + state.score;
 
                 if (state.gameType === 'lit') {
-                    let data = genLitExpression();
-                    state.current = { 
-                        question: data.q, 
-                        correct: data.ans, // Objet Poly
-                        displayAnswer: data.ans.toString()
-                    };
-                    qs("#question").textContent = "Développer : " + data.q;
-                    qs("#range-info").textContent = "Littéral";
                     qs("#virtual-keyboard").classList.remove("hidden");
-                } 
-                else if (state.gameType === 'frac') {
-                    // ... (Code Fractions existant) ...
-                    // Copier-coller de la logique fraction précédente
-                    // Pour garder le code concis ici, je reprends la logique simplifiée
+                    qs("#range-info").textContent = state.litMode === 'expand' ? "Développer" : "Équations";
+                    if (state.litMode === 'expand') {
+                        let data = genLitExpression();
+                        state.current = { q: data.q, correct: data.ans, display: data.display, mode: 'expand' };
+                    } else {
+                        let data = genLitEquation();
+                        state.current = { q: data.q, correct: data.ans, display: data.display, mode: 'solve' };
+                    }
+                    qs("#question").innerHTML = state.current.q;
+                
+                } else if (state.gameType === 'frac') {
                     qs("#virtual-keyboard").classList.add("hidden");
                     let f1 = genFrac(), f2 = genFrac();
-                    // Mixed logic
-                    if (state.fracMixed && Math.random()<0.3) {
-                         if(Math.random()<0.5) f1.d=1; else f2.d=1;
-                    }
+                    if (state.fracMixed && Math.random()<0.3) { if(Math.random()<0.5) f1.d=1; else f2.d=1; }
                     let op = state.ops[rand(0, state.ops.length-1)];
                     let res, sign;
                     if(op==='add'){ res=f1.add(f2); sign='+'; }
-                    if(op==='sub'){ res=f1.sub(f2); sign='-'; }
-                    if(op==='mul'){ res=f1.mul(f2); sign='×'; }
-                    if(op==='div'){ if(f2.n===0) f2.n=1; res=f1.div(f2); sign='÷'; }
-                    
+                    else if(op==='sub'){ res=f1.sub(f2); sign='-'; }
+                    else if(op==='mul'){ res=f1.mul(f2); sign='×'; }
+                    else { if(f2.n===0) f2.n=1; res=f1.div(f2); sign='÷'; }
                     const fmt = f => (f.n<0 || (f.n>0 && f.d<0)) ? `(${f.toString()})` : f.toString();
-                    state.current = { question: `${fmt(f1)} ${sign} ${fmt(f2)}`, correct: res };
-                    qs("#question").textContent = state.current.question + " = ?";
+                    state.current = { correct: res, display: res.toString() };
+                    qs("#question").innerHTML = `${fmt(f1)} ${sign} ${fmt(f2)} = ?`;
                     qs("#range-info").textContent = "Range Max: " + state.fracMax;
-                } 
-                else {
-                    // ... (Code Entiers existant) ...
+                } else {
                     qs("#virtual-keyboard").classList.add("hidden");
                     let v1 = genInt(), v2 = genInt();
                     let op = state.ops[rand(0, state.ops.length-1)];
                     let res, sign;
                     if(op==='add'){ res=v1+v2; sign='+'; }
-                    if(op==='sub'){ res=v1-v2; sign='-'; }
-                    if(op==='mul'){ res=v1*v2; sign='×'; }
+                    else if(op==='sub'){ res=v1-v2; sign='-'; }
+                    else { res=v1*v2; sign='×'; }
                     const fmt = n => n<0 ? `(${n})` : n;
-                    state.current = { question: `${fmt(v1)} ${sign} ${fmt(v2)}`, correct: res };
-                    qs("#question").textContent = state.current.question + " = ?";
+                    state.current = { correct: res, display: res };
+                    qs("#question").innerHTML = `${fmt(v1)} ${sign} ${fmt(v2)} = ?`;
                     qs("#range-info").textContent = "Range: " + state.intMin + "-" + state.intMax;
                 }
             }
 
-            // Helpers Generators
             function genInt() { 
                 let v = rand(state.intMin, state.intMax);
                 if (state.intNeg && Math.random() < 0.5) v = -v;
                 return v;
             }
             function genFrac() {
-                let safe=0;
-                while(safe++<50) {
+                let s=0; while(s++<50) {
                     let n=rand(1, state.fracMax), d=rand(2, state.fracMax);
                     if(n%d===0) continue;
                     if(state.fracNeg && Math.random()<0.5) n=-n;
                     let f = new Fraction(n,d);
-                    if(state.fracSimplify) f = f.simplify();
+                    if(state.fracSimplify) f = f.simplify(); // Génère question simplifiée
                     return f;
-                }
-                return new Fraction(1,2);
-            }
-
-            // --- VERIFICATION LITTÉRALE ---
-            function evaluatePoly(polyObj, xVal, yVal) {
-                // Calcule la valeur numérique du Poly cible
-                let sum = 0;
-                polyObj.terms.forEach(t => {
-                    sum += t.c * Math.pow(xVal, t.x) * Math.pow(yVal, t.y);
-                });
-                return sum;
-            }
-
-            function evaluateUserString(str, xVal, yVal) {
-                // Parse et evalue la string utilisateur
-                // 1. Remplacer '²' par '^2' pour homogénéiser, puis '**2' pour JS
-                str = str.replace(/²/g, '^2');
-                str = str.replace(/\^/g, '**');
-                
-                // 2. Insérer multiplication implicite
-                // Chiffre suivi de lettre: 2x -> 2*x
-                str = str.replace(/(\d)([a-zA-Z(])/g, '$1*$2');
-                // Lettre suivie de lettre ou paren: x( -> x*(, xy -> x*y
-                str = str.replace(/([a-zA-Z])([a-zA-Z(])/g, '$1*$2');
-                // Parenthèse fermante suivie de ...
-                str = str.replace(/(\))([a-zA-Z0-9(])/g, '$1*$2');
-                // Signe moins collé à lettre sans espace (-x) -> géré par JS (-1*x est mieux mais -x marche)
-
-                // 3. Remplacer x et y par valeurs
-                // Attention, simple replace 'x' remplace aussi dans 'exp'. Mais ici variables sont x, y.
-                // On utilise une regex avec boundary ou on split.
-                // Comme on a mis des * partout, x est isolé.
-                str = str.split('x').join(`(${xVal})`);
-                str = str.split('y').join(`(${yVal})`);
-
-                try {
-                    // Sécurité basique
-                    if (/[^0-9\+\-\*\/\(\)\.\s]/.test(str)) return NaN;
-                    return eval(str);
-                } catch (e) {
-                    return NaN;
-                }
+                } return new Fraction(1,2);
             }
 
             function submit() {
-                let input = qs("#answer").value.replace(/\s+/g, '').toLowerCase(); // minuscules, sans espaces
+                let input = qs("#answer").value.replace(/\s+/g, '').toLowerCase();
                 if(!input) return;
 
                 let isCorrect = false;
                 let feedback = "";
 
                 if (state.gameType === 'lit') {
-                    // Vérification par évaluation numérique
-                    // On prend des nombres premiers pour éviter les collisions (ex: 2+2 = 2*2)
-                    let xTest = 13, yTest = 17;
-                    
-                    let targetVal = evaluatePoly(state.current.correct, xTest, yTest);
-                    let userVal = evaluateUserString(input, xTest, yTest);
+                    let tx = 13, ty = 17; let tx2 = 7, ty2 = 23;
 
-                    // Deuxième passe pour être sûr (éviter chance)
-                    let xTest2 = 7, yTest2 = 23;
-                    let targetVal2 = evaluatePoly(state.current.correct, xTest2, yTest2);
-                    let userVal2 = evaluateUserString(input, xTest2, yTest2);
+                    if (state.current.mode === 'expand') {
+                        let targetVal = evaluatePolyObj(state.current.correct, tx, ty);
+                        let userVal = evaluateString(input, tx, ty);
+                        let targetVal2 = evaluatePolyObj(state.current.correct, tx2, ty2);
+                        let userVal2 = evaluateString(input, tx2, ty2);
 
-                    // Vérifier si l'utilisateur a juste réécrit la question (parenthèses interdites dans la forme développée réduite)
-                    // On tolère les parenthèses pour les nombres négatifs (-3)x... non, forme réduite = -3x.
-                    // Donc pas de parenthèses sauf si c'est pour encadrer un nombre négatif isolé ? 
-                    // Pour simplifier : Si la réponse contient "(", on prévient que ça doit être développé.
-                    // Sauf que le parser accepte 3+(-5).
-                    
-                    if (Math.abs(userVal - targetVal) < 0.0001 && Math.abs(userVal2 - targetVal2) < 0.0001) {
-                         // C'est mathématiquement égal.
-                         // Est-ce développé ?
-                         if (input.includes("(")) {
-                             // On check grossièrement.
-                             // Si l'input utilisateur est très proche de la string question (nettoyée), c'est de la triche
-                             let cleanQ = state.current.question.replace(/\s/g, '').toLowerCase();
-                             if (input === cleanQ) {
-                                 feedback = "Tu as réécrit la question ! Développe.";
-                                 qs("#feedback").style.color = "orange";
-                             } else {
-                                 // Accepter (parfois on écrit + (-5x))
-                                 isCorrect = true;
-                             }
-                         } else {
-                             isCorrect = true;
-                         }
-                    } 
+                        if (Math.abs(userVal - targetVal) < 0.001 && Math.abs(userVal2 - targetVal2) < 0.001) {
+                            if (input.includes("(")) {
+                                feedback = "Réécrit sans parenthèses !";
+                                qs("#feedback").style.color = "orange";
+                            } else isCorrect = true;
+                        }
+                    } else {
+                        // SOLVE MODE
+                        let rhs = input;
+                        if (input.startsWith("x=")) rhs = input.substring(2);
+
+                        if (hasUnsimplifiedFraction(rhs)) {
+                            feedback = "Juste, mais simplifie les fractions ! (ex: 4/2 -> 2)";
+                            qs("#feedback").style.color = "orange";
+                        } else {
+                            let userX = evaluateString(rhs, 0, ty);
+                            let userX2 = evaluateString(rhs, 0, ty2);
+
+                            if (isNaN(userX)) {
+                                feedback = "Expression invalide";
+                            } else {
+                                let result = evaluatePolyObj(state.current.correct, userX, ty);
+                                let result2 = evaluatePolyObj(state.current.correct, userX2, ty2);
+                                
+                                if (Math.abs(result) < 0.001 && Math.abs(result2) < 0.001) {
+                                    isCorrect = true;
+                                }
+                            }
+                        }
+                    }
                 } 
                 else if (state.gameType === 'frac') {
                     let userF = Fraction.parse(input);
                     if (userF && state.current.correct.equals(input)) {
-                        if (state.fracSimplify && (userF.n !== state.current.correct.n)) {
+                        if (userF.n !== state.current.correct.n) {
                              feedback = "Juste, mais simplifie !";
                              qs("#feedback").style.color = "orange";
-                        } else {
-                            isCorrect = true;
-                        }
+                        } else isCorrect = true;
                     }
                 } 
                 else {
@@ -597,21 +676,23 @@
                     state.score++;
                     qs("#feedback").textContent = "Correct !";
                     qs("#feedback").style.color = "green";
-                    
-                    // Progression dynamique
                     if(state.gameType==='int' && state.intMode==='dynamic') state.intMax = Math.min(state.intMax+state.intInc, state.intCap);
                     if(state.gameType==='frac' && state.fracMode==='dynamic') state.fracMax = Math.min(state.fracMax+1, state.fracCap);
-                    
                     setTimeout(nextQuestion, 600);
                 } else {
                     if (!feedback) feedback = "Faux, réessaie.";
                     qs("#feedback").textContent = feedback;
-                    qs("#feedback").style.color = feedback === "Faux, réessaie." ? "red" : "orange";
+                    qs("#feedback").style.color = feedback.includes("Faux") ? "red" : "orange";
                     qs("#show-answer-btn").classList.remove("hidden");
                 }
             }
 
-            // --- NAVIGATION & INIT ---
+            function backToMenu() {
+                qs("#exercise").classList.add("hidden");
+                qs("#config").classList.remove("hidden");
+                qs("#main-nav").classList.remove("hidden");
+            }
+
             qs("#start-btn").onclick = () => {
                 reset();
                 if(qs("#tab-int").classList.contains("active")) state.gameType='int';
@@ -622,7 +703,6 @@
                 state.unlimited = (qm==='unlimited');
                 state.total = Number(qs("#num-questions").value);
 
-                // Load Params
                 if(state.gameType==='int') {
                     state.ops = [];
                     if(qs("#int-op-add").checked) state.ops.push('add');
@@ -635,10 +715,9 @@
                         state.intMin = Number(qs("#int-fixed-min").value);
                         state.intMax = Number(qs("#int-fixed-max").value);
                     } else {
-                        state.intMin = Number(qs("#int-dyn-max").value) > 10 ? 2 : 2; // Simple hack
+                        state.intMin = Number(qs("#int-dyn-max").value) > 10 ? 2 : 2;
                         state.intMax = Number(qs("#int-dyn-max").value);
-                        state.intInc = 2; 
-                        state.intCap = Number(qs("#int-dyn-cap").value);
+                        state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value);
                     }
                 } 
                 else if(state.gameType==='frac') {
@@ -648,39 +727,31 @@
                     if(qs("#frac-op-mul").checked) state.ops.push('mul');
                     if(qs("#frac-op-div").checked) state.ops.push('div');
                     if(!state.ops.length) return alert("Choisis une opération");
-                    
                     state.fracMode = document.querySelector('input[name="frac-range-mode"]:checked').value;
                     state.fracMixed = qs("#frac-mixed").checked;
                     state.fracNeg = qs("#frac-negatives").checked;
-                    state.fracSimplify = qs("#frac-simplify").checked;
-                    
+                    // Simplification toujours true
                     if(state.fracMode==='fixed') state.fracMax = Number(qs("#frac-fixed-max").value);
-                    else {
-                        state.fracMax = Number(qs("#frac-dyn-max").value);
-                        state.fracCap = Number(qs("#frac-dyn-cap").value);
-                    }
+                    else { state.fracMax = Number(qs("#frac-dyn-max").value); state.fracCap = Number(qs("#frac-dyn-cap").value); }
                 }
                 else {
-                    // Config Littéral
+                    state.litMode = document.querySelector('input[name="lit-mode"]:checked').value;
+                    state.litUseY = qs("#lit-use-y").checked;
                     state.litTypes = [];
                     if(qs("#lit-type-dist-simple").checked) state.litTypes.push('dist-simple');
                     if(qs("#lit-type-dist-double").checked) state.litTypes.push('dist-double');
                     if(!state.litTypes.length) return alert("Choisis un type d'expression");
-                    state.litUseY = qs("#lit-use-y").checked;
                 }
-
                 qs("#config").classList.add("hidden");
                 qs("#main-nav").classList.add("hidden");
                 qs("#exercise").classList.remove("hidden");
                 nextQuestion();
             };
 
-            // Clavier Virtuel
             document.querySelectorAll(".key-btn").forEach(btn => {
                 btn.onclick = () => {
                     let input = qs("#answer");
                     let val = btn.getAttribute("data-key");
-                    // Insert at cursor
                     let start = input.selectionStart;
                     let end = input.selectionEnd;
                     let text = input.value;
@@ -693,24 +764,15 @@
             qs("#submit-btn").onclick = submit;
             qs("#answer").addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
             qs("#next-btn").onclick = nextQuestion;
-            qs("#menu-btn").onclick = () => {
-                qs("#exercise").classList.add("hidden");
-                qs("#config").classList.remove("hidden");
-                qs("#main-nav").classList.remove("hidden");
-            };
+            qs("#menu-btn").onclick = backToMenu;
             qs("#show-answer-btn").onclick = () => {
-                let ans = "";
-                if (state.gameType === 'lit') ans = state.current.displayAnswer;
-                else if (state.gameType === 'frac') ans = state.current.correct.toString();
-                else ans = state.current.correct;
-                
+                let ans = state.current.display;
                 qs("#feedback").textContent = "Réponse : " + ans;
                 qs("#feedback").style.color = "#333";
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.remove("hidden");
             };
 
-            // Tabs Logic
             ['int', 'frac', 'lit'].forEach(t => {
                 qs("#tab-"+t).onclick = () => {
                     ['int', 'frac', 'lit'].forEach(x => {
@@ -719,29 +781,33 @@
                     });
                     qs("#tab-"+t).classList.add("active");
                     qs("#config-"+t).classList.remove("hidden");
-                    
-                    // UI Fixes for radio buttons visibility inside tabs
                     if(t === 'int' || t === 'frac') updateRangesUI(t);
                 }
             });
 
             function updateRangesUI(type) {
                 let mode = document.querySelector(`input[name="${type}-range-mode"]:checked`).value;
-                if(mode==='fixed') {
-                    qs(`#${type}-fixed-range`).classList.remove("hidden");
-                    qs(`#${type}-dynamic-range`).classList.add("hidden");
-                } else {
-                    qs(`#${type}-fixed-range`).classList.add("hidden");
-                    qs(`#${type}-dynamic-range`).classList.remove("hidden");
-                }
+                if(mode==='fixed') { qs(`#${type}-fixed-range`).classList.remove("hidden"); qs(`#${type}-dynamic-range`).classList.add("hidden"); } 
+                else { qs(`#${type}-fixed-range`).classList.add("hidden"); qs(`#${type}-dynamic-range`).classList.remove("hidden"); }
             }
 
-            // Radio Listeners
             document.querySelectorAll('input[name="int-range-mode"]').forEach(r => r.addEventListener("change", () => updateRangesUI('int')));
             document.querySelectorAll('input[name="frac-range-mode"]').forEach(r => r.addEventListener("change", () => updateRangesUI('frac')));
+            
+            document.querySelectorAll('input[name="lit-mode"]').forEach(r => {
+                r.addEventListener("change", () => {
+                    if (r.value === 'expand') {
+                        qs("#desc-expand").classList.remove("hidden");
+                        qs("#desc-solve").classList.add("hidden");
+                    } else {
+                        qs("#desc-expand").classList.add("hidden");
+                        qs("#desc-solve").classList.remove("hidden");
+                    }
+                });
+            });
 
             reset();
-            updateRangesUI('int'); // init default view
+            updateRangesUI('int');
         })();
     </script>
 </body>
