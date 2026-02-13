@@ -70,27 +70,36 @@ button:hover {
     background-color: #d0d0d0;
 }
 
-#start-btn, #submit-btn {
+#start-btn,
+#submit-btn {
     background-color: #007bff;
     color: white;
     font-weight: bold;
     width: 80%;
 }
 
-#start-btn:hover, #submit-btn:hover {
+#start-btn:hover,
+#submit-btn:hover {
     background-color: #0056b3;
 }
 
 /* ========== Virtual Keyboard ========== */
 #virtual-keyboard {
     margin: 10px 0;
+    /* keep visible area compact */
 }
+
+.vk-block {
+    margin-bottom: 6px;
+}
+
 .kb-row {
     display: flex;
     justify-content: center;
     gap: 5px;
     margin-bottom: 5px;
 }
+
 .key-btn {
     padding: 10px;
     min-width: 40px;
@@ -101,10 +110,16 @@ button:hover {
     border: 1px solid #ced4da;
     box-shadow: 0 2px 0 #babbbc;
     margin: 2px;
+    border-radius: 6px;
 }
+
 .key-btn:active {
     box-shadow: none;
     transform: translateY(2px);
+}
+
+.key-btn.vk-only {
+    min-width: 80px;
 }
 
 /* ========== UI Helpers ========== */
@@ -137,7 +152,8 @@ label {
     cursor: pointer;
 }
 
-input[type="checkbox"], input[type="radio"] {
+input[type="checkbox"],
+input[type="radio"] {
     transform: scale(1.2);
     margin-right: 8px;
 }
@@ -177,9 +193,22 @@ input[type="number"]:focus {
     margin-bottom: 8px;
 }
 
-h2 { margin-top: 0; }
-h3 { margin-top: 20px; font-size: 1.1em; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-h4 { margin: 10px 0; color: #666; }
+h2 {
+    margin-top: 0;
+}
+
+h3 {
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+h4 {
+    margin: 10px 0;
+    color: #666;
+}
 
 #question {
     font-size: 1.8em;
@@ -191,4 +220,47 @@ h4 { margin: 10px 0; color: #666; }
 #feedback {
     font-weight: bold;
     min-height: 1.2em;
+}
+
+/* Modal session end */
+.modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 20, 20, 0.35);
+    z-index: 60;
+}
+
+.modal .modal-content {
+    max-width: 420px;
+    width: 90%;
+    padding: 18px;
+}
+
+/* Responsive tweaks for mobile: keep keys reachable */
+@media (max-width: 480px) {
+    .key-btn {
+        min-width: 36px;
+        padding: 10px 8px;
+        font-size: 1.1em;
+    }
+
+    .key-btn.vk-only {
+        min-width: 120px;
+    }
+
+    input[type="text"] {
+        font-size: 1.4em;
+        width: 92%;
+    }
+
+    .form-group,
+    .chk-group {
+        padding: 0 6%;
+    }
 }

@@ -207,23 +207,31 @@
 
             <h2 id="question"></h2>
 
-            <!-- NOTE: on ajoute des attributs pour mobile pour limiter corrections/auto -->
-            <input type="text" id="answer" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off"
-                spellcheck="false" placeholder="Ta réponse...">
+            <!-- inputmode dynamique (géré en JS) -->
+            <input type="text" id="answer" autocomplete="off" placeholder="Ta réponse..." autocorrect="off"
+                autocapitalize="off" spellcheck="false" enterkeyhint="done">
 
-            <!-- Clavier Virtuel (utilisé pour Littéral et Fraction) -->
-            <div id="virtual-keyboard" class="hidden" aria-hidden="true">
-                <div class="kb-row">
-                    <button class="key-btn" data-key="x">x</button>
-                    <button class="key-btn" data-key="y">y</button>
-                    <button class="key-btn" data-key="²">²</button>
+            <!-- Claviers virtuels (on affiche seulement le bloc nécessaire) -->
+            <div id="virtual-keyboard" class="hidden">
+                <div id="vk-lit" class="vk-block hidden">
+                    <div class="kb-row">
+                        <button class="key-btn" data-key="x">x</button>
+                        <button class="key-btn" data-key="y">y</button>
+                        <button class="key-btn" data-key="²">²</button>
+                    </div>
+                    <div class="kb-row">
+                        <button class="key-btn" data-key="+">+</button>
+                        <button class="key-btn" data-key="-">-</button>
+                        <button class="key-btn" data-key="/">/</button>
+                        <button class="key-btn" data-key="(">(</button>
+                        <button class="key-btn" data-key=")">)</button>
+                    </div>
                 </div>
-                <div class="kb-row">
-                    <button class="key-btn" data-key="+">+</button>
-                    <button class="key-btn" data-key="-">-</button>
-                    <button class="key-btn" data-key="/">/</button> <!-- CHG: slash present for fractions -->
-                    <button class="key-btn" data-key="(">(</button>
-                    <button class="key-btn" data-key=")">)</button>
+
+                <div id="vk-frac" class="vk-block hidden">
+                    <div class="kb-row">
+                        <button class="key-btn vk-only" data-key="/">/</button>
+                    </div>
                 </div>
             </div>
 
@@ -235,6 +243,17 @@
             <button id="next-btn" class="hidden">Suivant</button>
 
         </section>
+
+        <!-- Session end modal (in-page, évite alert natif) -->
+        <div id="session-end" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content card">
+                <h3>Session terminée</h3>
+                <p id="session-end-msg"></p>
+                <div style="margin-top:10px;">
+                    <button id="session-end-close">Retour au menu</button>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -356,6 +375,7 @@
             }
 
             // --- LITTÉRAL GENERATORS ---
+
             function genLitTerm(allowVarY, maxDeg = 1) {
                 let c = rand(1, 5);
                 if (Math.random() < 0.5) c = -c;
@@ -377,6 +397,7 @@
             function polyToQ(p) { return p.toString().replace(/\s/g, ''); }
 
             function genLitExpression() {
+                // Pour "Développer"
                 let safety = 0;
                 while (safety++ < 20) {
                     let type = state.litTypes[rand(0, state.litTypes.length - 1)];
@@ -402,6 +423,8 @@
                         }
                         correctPoly = A.multiply(grp.poly).add(D);
                     } else {
+                        // Double Distributivity
+                        if (!hasVar && !D.terms.some(t => t.x > 0 || t.y > 0)) continue;
                         let g1 = group(A, B);
                         let g2 = group(C, D);
                         question = `${g1.str}${g2.str}`;
@@ -415,7 +438,7 @@
 
             function genLitEquation() {
                 let allowY = state.litUseY;
-                let type = state.litTypes[rand(0, state.litTypes.length - 1)];
+                let type = state.litTypes[rand(0, state.litTypes.length - 1)]; // dist-simple ou dist-double
                 let blocks = (type === 'dist-double') ? 2 : 1;
 
                 let totalLHS = new Poly();
@@ -473,6 +496,8 @@
 
                 let finalPoly = totalLHS.add(polyY).add(polyD);
 
+                // --- CALCUL DE LA RÉPONSE FORMATÉE ---
+                // on a Ax + By + C = 0 -> x = -By/A - C/A
                 let A = 0, B = 0, C = 0;
                 finalPoly.terms.forEach(t => {
                     if (t.x === 1 && t.y === 0) A = t.c;
@@ -481,6 +506,7 @@
                 });
 
                 let solParts = [];
+                // Partie Y
                 if (B !== 0) {
                     let fY = new Fraction(-B, A).simplify();
                     let sY = fY.toString();
@@ -488,6 +514,7 @@
                     else if (sY === "-1") sY = "-";
                     solParts.push(sY + "y");
                 }
+                // Partie Constante
                 if (C !== 0) {
                     let fC = new Fraction(-C, A).simplify();
                     let sC = fC.toString();
@@ -542,10 +569,9 @@
 
             // --- GAME ---
             function nextQuestion() {
+                // End check
                 if (!state.unlimited && state.index >= state.total) {
-                    // NOTE: alert will hide keyboard; keep it only for end-session.
-                    alert("Session terminée ! Score : " + state.score + " / " + state.total);
-                    backToMenu();
+                    showSessionEnd(`Score : ${state.score} / ${state.total}`);
                     return;
                 }
                 state.index++;
@@ -553,13 +579,17 @@
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
                 qs("#answer").value = "";
-                // IMPORTANT: we will focus *after* DOM changes to keep keyboard visible on mobile
-                // (focus called a bit later)
+                // keep the keyboard open: focus the input (will be reinforced below)
+                const inputEl = qs("#answer");
+                inputEl.focus();
+
                 qs("#progress").textContent = state.unlimited ? "Q: " + state.index : `Q: ${state.index} / ${state.total}`;
                 qs("#score").textContent = "Score: " + state.score;
 
+                // Update virtual keyboard & input attributes for the current mode
+                updateInputForMode(state.gameType);
+
                 if (state.gameType === 'lit') {
-                    qs("#virtual-keyboard").classList.remove("hidden");
                     qs("#range-info").textContent = state.litMode === 'expand' ? "Développer" : "Équations";
                     if (state.litMode === 'expand') {
                         let data = genLitExpression();
@@ -570,8 +600,6 @@
                     }
                     qs("#question").innerHTML = state.current.q;
                 } else if (state.gameType === 'frac') {
-                    // CHG: show virtual keyboard for fraction mode so user can use the "/" button
-                    qs("#virtual-keyboard").classList.remove("hidden");
                     let f1 = genFrac(), f2 = genFrac();
                     if (state.fracMixed && Math.random() < 0.3) { if (Math.random() < 0.5) f1.d = 1; else f2.d = 1; }
                     let op = state.ops[rand(0, state.ops.length - 1)];
@@ -581,11 +609,10 @@
                     else if (op === 'mul') { res = f1.mul(f2); sign = '×'; }
                     else { if (f2.n === 0) f2.n = 1; res = f1.div(f2); sign = '÷'; }
                     const fmt = f => (f.n < 0 || (f.n > 0 && f.d < 0)) ? `(${f.toString()})` : f.toString();
-                    state.current = { correct: res, display: res.toString() };
+                    state.current = { correct: res, display: res.toString(), mode: 'frac' };
                     qs("#question").innerHTML = `${fmt(f1)} ${sign} ${fmt(f2)} = ?`;
                     qs("#range-info").textContent = "Range Max: " + state.fracMax;
                 } else {
-                    qs("#virtual-keyboard").classList.add("hidden");
                     let v1 = genInt(), v2 = genInt();
                     let op = state.ops[rand(0, state.ops.length - 1)];
                     let res, sign;
@@ -593,22 +620,16 @@
                     else if (op === 'sub') { res = v1 - v2; sign = '-'; }
                     else { res = v1 * v2; sign = '×'; }
                     const fmt = n => n < 0 ? `(${n})` : n;
-                    state.current = { correct: res, display: res };
+                    state.current = { correct: res, display: res, mode: 'int' };
                     qs("#question").innerHTML = `${fmt(v1)} ${sign} ${fmt(v2)} = ?`;
                     qs("#range-info").textContent = "Range: " + state.intMin + "-" + state.intMax;
                 }
 
-                // CHG: robust focus to keep mobile keyboard visible.
-                // First immediate focus (helps desktop), then a delayed focus (helps mobile where layout changes can hide the keyboard).
-                const answerInput = qs("#answer");
-                try { answerInput.focus({ preventScroll: true }); } catch (e) { answerInput.focus(); }
-                // set caret at end
-                answerInput.setSelectionRange(answerInput.value.length, answerInput.value.length);
-                // delayed focus to keep keyboard stable on mobile
+                // After DOM updates, ensure the input regains focus (helps mobile keyboards stay open)
                 setTimeout(() => {
-                    try { answerInput.focus({ preventScroll: true }); } catch (e) { answerInput.focus(); }
-                    answerInput.setSelectionRange(answerInput.value.length, answerInput.value.length);
-                }, 120);
+                    inputEl.focus();
+                    try { inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length); } catch (e) {/* ignore */ }
+                }, 80);
             }
 
             function genInt() {
@@ -693,7 +714,8 @@
                     qs("#feedback").style.color = "green";
                     if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.intInc, state.intCap);
                     if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + 1, state.fracCap);
-                    setTimeout(nextQuestion, 600);
+                    // On passe automatiquement à la question suivante mais en gardant le focus (et sans alert natif)
+                    setTimeout(nextQuestion, 350);
                 } else {
                     if (!feedback) feedback = "Faux, réessaie.";
                     qs("#feedback").textContent = feedback;
@@ -706,6 +728,8 @@
                 qs("#exercise").classList.add("hidden");
                 qs("#config").classList.remove("hidden");
                 qs("#main-nav").classList.remove("hidden");
+                // Blur answer to hide keyboard when returning to menu
+                try { qs("#answer").blur(); } catch (e) { }
             }
 
             qs("#start-btn").onclick = () => {
@@ -716,7 +740,7 @@
 
                 let qm = document.querySelector('input[name="qmode"]:checked').value;
                 state.unlimited = (qm === 'unlimited');
-                state.total = Number(qs("#num-questions").value);
+                state.total = Number(qs("#num-questions").value) || 10;
 
                 if (state.gameType === 'int') {
                     state.ops = [];
@@ -730,9 +754,10 @@
                         state.intMin = Number(qs("#int-fixed-min").value);
                         state.intMax = Number(qs("#int-fixed-max").value);
                     } else {
+                        // Dynamic start
                         state.intMin = 2;
-                        state.intMax = Number(qs("#int-dyn-max").value);
-                        state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value);
+                        state.intMax = Number(qs("#int-dyn-max").value) || 10;
+                        state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value) || 100;
                     }
                 }
                 else if (state.gameType === 'frac') {
@@ -745,8 +770,9 @@
                     state.fracMode = document.querySelector('input[name="frac-range-mode"]:checked').value;
                     state.fracMixed = qs("#frac-mixed").checked;
                     state.fracNeg = qs("#frac-negatives").checked;
-                    if (state.fracMode === 'fixed') state.fracMax = Number(qs("#frac-fixed-max").value);
-                    else { state.fracMax = Number(qs("#frac-dyn-max").value); state.fracCap = Number(qs("#frac-dyn-cap").value); }
+                    // Simplification toujours true
+                    if (state.fracMode === 'fixed') state.fracMax = Number(qs("#frac-fixed-max").value) || 10;
+                    else { state.fracMax = Number(qs("#frac-dyn-max").value) || 4; state.fracCap = Number(qs("#frac-dyn-cap").value) || 20; }
                 }
                 else {
                     state.litMode = document.querySelector('input[name="lit-mode"]:checked').value;
@@ -771,8 +797,7 @@
                     let text = input.value;
                     input.value = text.substring(0, start) + val + text.substring(end);
                     input.selectionStart = input.selectionEnd = start + val.length;
-                    // CHG: refocus after inserting to keep mobile keyboard visible
-                    try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
+                    input.focus();
                 };
             });
 
@@ -821,8 +846,70 @@
                 });
             });
 
+            // --- New : update input attributes & virtual keyboard display per mode
+            function updateInputForMode(mode) {
+                const vk = qs("#virtual-keyboard");
+                const vkLit = qs("#vk-lit");
+                const vkFrac = qs("#vk-frac");
+                const inputEl = qs("#answer");
+
+                // hide all by default
+                vk.classList.add("hidden");
+                vkLit.classList.add("hidden");
+                vkFrac.classList.add("hidden");
+
+                if (mode === 'lit') {
+                    // Show full virtual keyboard for littéral
+                    vk.classList.remove("hidden");
+                    vkLit.classList.remove("hidden");
+                    // Input mode allows letters & symbols
+                    inputEl.setAttribute("inputmode", "text");
+                    inputEl.setAttribute("type", "text");
+                } else if (mode === 'frac') {
+                    // Show virtual keyboard but only the slash key
+                    vk.classList.remove("hidden");
+                    vkFrac.classList.remove("hidden");
+                    // Prefer numeric keyboard on mobile, user wants numeric + slash if possible:
+                    // We set inputmode to "decimal" (or numeric) to bring numeric keyboard and provide "/" via virtual key.
+                    inputEl.setAttribute("inputmode", "decimal");
+                    inputEl.setAttribute("type", "text");
+                } else { // int
+                    // No virtual keyboard
+                    // numeric keyboard for integers
+                    inputEl.setAttribute("inputmode", "numeric");
+                    inputEl.setAttribute("type", "text");
+                }
+
+                // ensure input is focused (keeps mobile keyboard open)
+                setTimeout(() => { try { inputEl.focus(); } catch (e) { } }, 60);
+            }
+
+            // --- Session end modal handling (remplace alert)
+            function showSessionEnd(msg) {
+                qs("#session-end-msg").textContent = msg;
+                qs("#session-end").classList.remove("hidden");
+                // Make sure exercise UI is still visible (we don't move to menu yet)
+                // Blur input so keyboard hides when modal is up
+                try { qs("#answer").blur(); } catch (e) { }
+            }
+            qs("#session-end-close").onclick = () => {
+                qs("#session-end").classList.add("hidden");
+                backToMenu();
+            };
+
+            // Keep keyboard open on touch interactions (mobile improvement)
+            document.addEventListener('touchstart', (e) => {
+                // if we're in exercise and not showing session-end or menu, keep focus on input
+                if (!qs("#exercise").classList.contains("hidden") && qs("#session-end").classList.contains("hidden")) {
+                    try { qs("#answer").focus(); } catch (er) { }
+                }
+            }, { passive: true });
+
+            // Start: initialize UI
             reset();
             updateRangesUI('int');
+            // ensure the default virtual keyboard state corresponds to initial tab
+            // note: no focus until user starts
         })();
     </script>
 </body>
