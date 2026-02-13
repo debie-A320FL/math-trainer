@@ -567,6 +567,36 @@
                 return false;
             }
 
+            // --- NOUVEAU : détecter termes semblables non regroupés (ex: "3x - x")
+            function userHasLikeTerms(input) {
+                // Normalize: remove spaces, replace unicode squared with ^2
+                let s = String(input).replace(/\s+/g, '').replace(/²/g, '^2');
+                if (!s) return false;
+                // split into additive terms by + / - while keeping sign
+                // we insert explicit + for ease of split (unless begins with -)
+                let tokens = s.replace(/^\+/, '').match(/[+\-]?[^+\-]+/g);
+                if (!tokens || tokens.length <= 1) return false;
+
+                const varCount = {};
+                for (let tk of tokens) {
+                    // if token contains x or y, extract exponents
+                    let hasX = /x/.test(tk);
+                    let hasY = /y/.test(tk);
+                    if (!hasX && !hasY) continue; // constant term -> ignore
+                    // extract exponent for x
+                    let expX = 0, expY = 0;
+                    let mX = tk.match(/x(?:\^(\d+))?/);
+                    if (mX) expX = mX[1] ? Number(mX[1]) : 1;
+                    let mY = tk.match(/y(?:\^(\d+))?/);
+                    if (mY) expY = mY[1] ? Number(mY[1]) : 1;
+                    // create canonical key
+                    let key = `x${expX}y${expY}`;
+                    varCount[key] = (varCount[key] || 0) + 1;
+                    if (varCount[key] > 1) return true; // found repeated variable-signature
+                }
+                return false;
+            }
+
             // --- GAME ---
             function nextQuestion() {
                 // End check
@@ -665,10 +695,18 @@
                         let userVal2 = evaluateString(input, tx2, ty2);
 
                         if (Math.abs(userVal - targetVal) < 0.001 && Math.abs(userVal2 - targetVal2) < 0.001) {
+                            // check parentheses (require expanded)
                             if (input.includes("(")) {
                                 feedback = "Réécrit sans parenthèses !";
                                 qs("#feedback").style.color = "orange";
-                            } else isCorrect = true;
+                            }
+                            // check for like terms not regroupés (ex: 3x - 1x)
+                            else if (userHasLikeTerms(input)) {
+                                feedback = "Correct, mais simplifie les termes semblables (ex: 3x - x → 2x).";
+                                qs("#feedback").style.color = "orange";
+                            } else {
+                                isCorrect = true;
+                            }
                         }
                     } else {
                         // SOLVE MODE
@@ -862,20 +900,19 @@
                     // Show full virtual keyboard for littéral
                     vk.classList.remove("hidden");
                     vkLit.classList.remove("hidden");
-                    // Input mode allows letters & symbols
-                    inputEl.setAttribute("inputmode", "text");
+                    // IMPORTANT: user wanted numeric system keyboard also in literál mode.
+                    // So we set inputmode to decimal (numeric) and rely on virtual keys for letters.
+                    inputEl.setAttribute("inputmode", "decimal");
                     inputEl.setAttribute("type", "text");
                 } else if (mode === 'frac') {
                     // Show virtual keyboard but only the slash key
                     vk.classList.remove("hidden");
                     vkFrac.classList.remove("hidden");
-                    // Prefer numeric keyboard on mobile, user wants numeric + slash if possible:
-                    // We set inputmode to "decimal" (or numeric) to bring numeric keyboard and provide "/" via virtual key.
+                    // Prefer numeric keyboard on mobile; slash provided by virtual key
                     inputEl.setAttribute("inputmode", "decimal");
                     inputEl.setAttribute("type", "text");
                 } else { // int
                     // No virtual keyboard
-                    // numeric keyboard for integers
                     inputEl.setAttribute("inputmode", "numeric");
                     inputEl.setAttribute("type", "text");
                 }
@@ -888,7 +925,6 @@
             function showSessionEnd(msg) {
                 qs("#session-end-msg").textContent = msg;
                 qs("#session-end").classList.remove("hidden");
-                // Make sure exercise UI is still visible (we don't move to menu yet)
                 // Blur input so keyboard hides when modal is up
                 try { qs("#answer").blur(); } catch (e) { }
             }
@@ -908,8 +944,7 @@
             // Start: initialize UI
             reset();
             updateRangesUI('int');
-            // ensure the default virtual keyboard state corresponds to initial tab
-            // note: no focus until user starts
+            // no initial focus until user starts
         })();
     </script>
 </body>
