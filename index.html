@@ -34,6 +34,7 @@
                     <label><input type="checkbox" id="int-op-add" checked> Addition</label>
                     <label><input type="checkbox" id="int-op-sub" checked> Soustraction</label>
                     <label><input type="checkbox" id="int-op-mul" checked> Multiplication</label>
+                    <label><input type="checkbox" id="int-op-div"> Division</label>
                     <!-- On cache l'entrainement avec les carrés -->
                     <label class="hidden"><input type="checkbox" id="int-op-sq"> Carrés (x²)</label>
                 </div>
@@ -676,10 +677,13 @@
                         // Affichage spécifique pour le carré (pas de v2, pas de sign)
                         qs("#question").innerHTML = `${fmt(v1)}² = ?`;
                     }
-                    else {
-                        // Multiplication par défaut
+                    else if (op === 'mul'){
                         res = v1 * v2;
                         qs("#question").innerHTML = `${fmt(v1)} × ${fmt(v2)} = ?`;
+                    }
+                    else if (op === 'div'){
+                        res = v2;
+                        qs("#question").innerHTML = `${fmt(v1 * v2)} / ${fmt(v1)} = ?`;
                     }
 
                     state.current = { correct: res, display: res, mode: 'int' };
@@ -804,8 +808,9 @@
                     fbEl.className = "feedback-success"; // VERT
                     
                     // Augmentation difficulté dynamique
-                    if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.intInc, state.intCap);
-                    if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + 1, state.fracCap);
+                    // La difficulté n'augmente que si le score augmente
+                    if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.score, state.intCap);
+                    if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + state.score, state.fracCap);
 
                     // Passer à la suite après un court délai
                     setTimeout(nextQuestion, 500);
@@ -859,6 +864,7 @@
                     if (qs("#int-op-sub").checked) state.ops.push('sub');
                     if (qs("#int-op-mul").checked) state.ops.push('mul');
                     if (qs("#int-op-sq").checked) state.ops.push('sq');
+                    if (qs("#int-op-div").checked) state.ops.push('div');
                     if (!state.ops.length) return alert("Choisis une opération");
                     state.intNeg = qs("#int-negatives").checked;
                     state.intMode = document.querySelector('input[name="int-range-mode"]:checked').value;
