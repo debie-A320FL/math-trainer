@@ -264,3 +264,9 @@ h4 {
         padding: 0 6%;
     }
 }
+
+/* Couleurs de feedback */
+.feedback-success { color: #28a745 !important; }
+.feedback-warning { color: #fd7e14 !important; }
+.feedback-error   { color: #dc3545 !important; }
+.feedback-neutral { color: #333333 !important; }

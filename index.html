@@ -34,6 +34,8 @@
                     <label><input type="checkbox" id="int-op-add" checked> Addition</label>
                     <label><input type="checkbox" id="int-op-sub" checked> Soustraction</label>
                     <label><input type="checkbox" id="int-op-mul" checked> Multiplication</label>
+                    <!-- On cache l'entrainement avec les carrés -->
+                    <label class="hidden"><input type="checkbox" id="int-op-sq"> Carrés (x²)</label>
                 </div>
 
                 <h3>Type de Range</h3>
@@ -370,7 +372,8 @@
                     fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true,
                     fracMode: 'dynamic', fracCap: 0,
                     litMode: 'expand', litTypes: [], litUseY: false,
-                    index: 0, total: 0, unlimited: false, score: 0, current: null
+                    index: 0, total: 0, unlimited: false, score: 0, current: null,
+                    isAnimating: false 
                 };
             }
 
@@ -599,13 +602,22 @@
 
             // --- GAME ---
             function nextQuestion() {
+                // On déverrouille le jeu (au cas où)
+                state.isAnimating = false;
+
                 // End check
                 if (!state.unlimited && state.index >= state.total) {
                     showSessionEnd(`Score : ${state.score} / ${state.total}`);
                     return;
                 }
                 state.index++;
-                qs("#feedback").textContent = "";
+
+                // NETTOYAGE COMPLET DU FEEDBACK
+                const fb = qs("#feedback");
+                fb.textContent = "";
+                // On supprime toutes les classes de couleur et on met la neutre
+                fb.className = "feedback-neutral"; 
+
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
                 qs("#answer").value = "";
@@ -645,15 +657,38 @@
                 } else {
                     let v1 = genInt(), v2 = genInt();
                     let op = state.ops[rand(0, state.ops.length - 1)];
-                    let res, sign;
-                    if (op === 'add') { res = v1 + v2; sign = '+'; }
-                    else if (op === 'sub') { res = v1 - v2; sign = '-'; }
-                    else { res = v1 * v2; sign = '×'; }
+                    let res;
+
+                    // Petite fonction pour mettre des parenthèses si négatif (ex: -5 devient (-5))
                     const fmt = n => n < 0 ? `(${n})` : n;
+
+                    if (op === 'add') {
+                        res = v1 + v2;
+                        // On définit l'affichage ICI
+                        qs("#question").innerHTML = `${fmt(v1)} + ${fmt(v2)} = ?`;
+                    }
+                    else if (op === 'sub') {
+                        res = v1 - v2;
+                        qs("#question").innerHTML = `${fmt(v1)} - ${fmt(v2)} = ?`;
+                    }
+                    else if (op === 'sq') {
+                        res = v1 * v1;
+                        // Affichage spécifique pour le carré (pas de v2, pas de sign)
+                        qs("#question").innerHTML = `${fmt(v1)}² = ?`;
+                    }
+                    else {
+                        // Multiplication par défaut
+                        res = v1 * v2;
+                        qs("#question").innerHTML = `${fmt(v1)} × ${fmt(v2)} = ?`;
+                    }
+
                     state.current = { correct: res, display: res, mode: 'int' };
-                    qs("#question").innerHTML = `${fmt(v1)} ${sign} ${fmt(v2)} = ?`;
                     qs("#range-info").textContent = "Range: " + state.intMin + "-" + state.intMax;
                 }
+                
+                // ---On initialise les points ICI, après avoir créé state.current ---
+                // -> point maximum que l'on peut gagne en cas de réponse juste (se reset à 1 à chaque fois)
+                state.current.potentialPoints = 1; 
 
                 // After DOM updates, ensure the input regains focus (helps mobile keyboards stay open)
                 setTimeout(() => {
@@ -679,85 +714,123 @@
             }
 
             function submit() {
+                // 1. Si on est déjà en train de valider une bonne réponse (attente 500ms), on bloque tout.
+                if (state.isAnimating) return;
+
                 let input = qs("#answer").value.replace(/\s+/g, '').toLowerCase();
-                if (!input) return;
 
-                let isCorrect = false;
-                let feedback = "";
+                // 2. Gestion du champ vide : on nettoie le message pour ne pas laisser un vieux "Faux"
+                if (!input) {
+                    qs("#feedback").textContent = "";
+                    return;
+                }
 
+                // On détermine le statut de la réponse : 'correct', 'simplify', ou 'wrong'
+                let status = 'wrong'; 
+                let feedbackMsg = "";
+
+                // --- LOGIQUE DE VÉRIFICATION (MATHS) ---
+                
                 if (state.gameType === 'lit') {
-                    let tx = 13, ty = 17; let tx2 = 7, ty2 = 23;
-
+                    let tx = 13, ty = 17; let tx2 = 7, ty2 = 23; // Nombres premiers pour tester
                     if (state.current.mode === 'expand') {
                         let targetVal = evaluatePolyObj(state.current.correct, tx, ty);
                         let userVal = evaluateString(input, tx, ty);
                         let targetVal2 = evaluatePolyObj(state.current.correct, tx2, ty2);
                         let userVal2 = evaluateString(input, tx2, ty2);
 
+                        // Vérification mathématique (à 0.001 près)
                         if (Math.abs(userVal - targetVal) < 0.001 && Math.abs(userVal2 - targetVal2) < 0.001) {
-                            // check parentheses (require expanded)
                             if (input.includes("(")) {
-                                feedback = "Réécrit sans parenthèses !";
-                                qs("#feedback").style.color = "orange";
-                            }
-                            // check for like terms not regroupés (ex: 3x - 1x)
-                            else if (userHasLikeTerms(input)) {
-                                feedback = "Correct, mais simplifie les termes semblables (ex: 3x - x → 2x).";
-                                qs("#feedback").style.color = "orange";
+                                status = 'simplify';
+                                feedbackMsg = "Réécrit sans parenthèses !";
+                            } else if (userHasLikeTerms(input)) {
+                                status = 'simplify';
+                                feedbackMsg = "Simplifie les termes (ex: 3x - x → 2x).";
                             } else {
-                                isCorrect = true;
+                                status = 'correct';
                             }
                         }
                     } else {
-                        // SOLVE MODE
-                        let rhs = input;
-                        if (input.startsWith("x=")) rhs = input.substring(2);
-
+                        // Mode Résoudre (Solve)
+                        let rhs = input.startsWith("x=") ? input.substring(2) : input;
                         if (hasUnsimplifiedFraction(rhs)) {
-                            feedback = "Juste, mais simplifie les fractions ! (ex: 4/2 -> 2)";
-                            qs("#feedback").style.color = "orange";
+                            status = 'simplify';
+                            feedbackMsg = "Simplifie les fractions ! (ex: 4/2 -> 2)";
                         } else {
-                            let userX = evaluateString(rhs, 0, ty);
+                            let userX = evaluateString(rhs, 0, ty); 
                             let userX2 = evaluateString(rhs, 0, ty2);
-
-                            if (isNaN(userX)) {
-                                feedback = "Expression invalide";
-                            } else {
+                            if (!isNaN(userX)) {
                                 let result = evaluatePolyObj(state.current.correct, userX, ty);
                                 let result2 = evaluatePolyObj(state.current.correct, userX2, ty2);
-
                                 if (Math.abs(result) < 0.001 && Math.abs(result2) < 0.001) {
-                                    isCorrect = true;
+                                    status = 'correct';
                                 }
                             }
                         }
                     }
-                }
+                } 
                 else if (state.gameType === 'frac') {
                     let userF = Fraction.parse(input);
                     if (userF && state.current.correct.equals(input)) {
                         if (userF.n !== state.current.correct.n) {
-                            feedback = "Juste, mais simplifie !";
-                            qs("#feedback").style.color = "orange";
-                        } else isCorrect = true;
+                            status = 'simplify';
+                            feedbackMsg = "Juste, mais simplifie la fraction ! (ex: 4/2 -> 2)";
+                        } else {
+                            status = 'correct';
+                        }
+                    }
+                } 
+                else {
+                    // Entiers
+                    if (Number(input) === state.current.correct) {
+                        status = 'correct';
                     }
                 }
-                else {
-                    if (Number(input) === state.current.correct) isCorrect = true;
-                }
 
-                if (isCorrect) {
-                    state.score++;
-                    qs("#feedback").textContent = "Correct !";
-                    qs("#feedback").style.color = "green";
+                // --- CONSÉQUENCES (POINTS ET COULEURS) ---
+
+                let fbEl = qs("#feedback");
+
+                if (status === 'correct') {
+                    // VERROUILLAGE : On empêche de re-cliquer pendant l'animation
+                    state.isAnimating = true;
+
+                    // C'est GAGNÉ
+                    // On ajoute les points (1, 0.5 ou 0 selon l'historique)
+                    state.score += state.current.potentialPoints;
+                    
+                    fbEl.textContent = "Correct !";
+                    fbEl.className = "feedback-success"; // VERT
+                    
+                    // Augmentation difficulté dynamique
                     if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.intInc, state.intCap);
                     if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + 1, state.fracCap);
-                    // On passe automatiquement à la question suivante mais en gardant le focus (et sans alert natif)
-                    setTimeout(nextQuestion, 350);
-                } else {
-                    if (!feedback) feedback = "Faux, réessaie.";
-                    qs("#feedback").textContent = feedback;
-                    qs("#feedback").style.color = feedback.includes("Faux") ? "red" : "orange";
+
+                    // Passer à la suite après un court délai
+                    setTimeout(nextQuestion, 500);
+                } 
+                else if (status === 'simplify') {
+                    // Pas de verrouillage ici, le joueur doit pouvoir corriger
+
+                    // C'est PRESQUE BON (Orange)
+                    fbEl.textContent = feedbackMsg;
+                    fbEl.className = "feedback-warning"; // ORANGE
+                    
+                    // Pénalité : Si on avait encore droit à 1 pt, on passe à 0.5.
+                    // (Si on était déjà à 0, on reste à 0).
+                    if (state.current.potentialPoints > 0.5) {
+                        state.current.potentialPoints = 0.5;
+                    }
+                } 
+                else {
+                    // C'est FAUX (Rouge)
+                    fbEl.textContent = "Faux, réessaie.";
+                    fbEl.className = "feedback-error"; // ROUGE
+                    
+                    // Pénalité fatale : plus aucun point possible pour cette question
+                    state.current.potentialPoints = 0;
+                    
                     qs("#show-answer-btn").classList.remove("hidden");
                 }
             }
@@ -785,6 +858,7 @@
                     if (qs("#int-op-add").checked) state.ops.push('add');
                     if (qs("#int-op-sub").checked) state.ops.push('sub');
                     if (qs("#int-op-mul").checked) state.ops.push('mul');
+                    if (qs("#int-op-sq").checked) state.ops.push('sq');
                     if (!state.ops.length) return alert("Choisis une opération");
                     state.intNeg = qs("#int-negatives").checked;
                     state.intMode = document.querySelector('input[name="int-range-mode"]:checked').value;
@@ -844,9 +918,13 @@
             qs("#next-btn").onclick = nextQuestion;
             qs("#menu-btn").onclick = backToMenu;
             qs("#show-answer-btn").onclick = () => {
+                // On ne peut plus gagner de point si on nous a donné la réponse
+                state.current.potentialPoints = 0; 
+
+                // Affichage
                 let ans = state.current.display;
                 qs("#feedback").textContent = "Réponse : " + ans;
-                qs("#feedback").style.color = "#333";
+                qs("#feedback").className = "feedback-neutral"; // GRIS
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.remove("hidden");
             };
