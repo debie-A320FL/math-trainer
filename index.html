@@ -49,7 +49,7 @@
                         <span style="font-size:0.9em; color:#555">Ex: Min 2, Max 10 &rarr; 3, 7, 9...</span>
                     </p>
                     <div class="form-group"><label>Min :</label><input type="number" id="int-fixed-min" value="2"></div>
-                    <div class="form-group"><label>Max :</label><input type="number" id="int-fixed-max" value="10">
+                    <div class="form-group"><label>Max :</label><input type="number" id="int-fixed-max" value="20">
                     </div>
                 </div>
 
@@ -67,7 +67,7 @@
                 <h3>Options</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="int-negatives">
+                        <input type="checkbox" id="int-negatives" checked>
                         Inclure nombres négatifs (50%)
                         <br><small style="color:#666">Le nombre peut être -5 comme 5.</small>
                     </label>
@@ -83,13 +83,13 @@
                     <label><input type="checkbox" id="frac-op-add" checked> Addition</label>
                     <label><input type="checkbox" id="frac-op-sub" checked> Soustraction</label>
                     <label><input type="checkbox" id="frac-op-mul" checked> Multiplication</label>
-                    <label><input type="checkbox" id="frac-op-div"> Division</label>
+                    <label><input type="checkbox" id="frac-op-div" checked> Division</label>
                 </div>
 
                 <h3>Type de Range</h3>
                 <div class="chk-group">
-                    <label><input type="radio" name="frac-range-mode" value="fixed"> Range fixe</label>
-                    <label><input type="radio" name="frac-range-mode" value="dynamic" checked> Range dynamique</label>
+                    <label><input type="radio" name="frac-range-mode" value="fixed" checked> Range fixe</label>
+                    <label><input type="radio" name="frac-range-mode" value="dynamic"> Range dynamique</label>
                 </div>
 
                 <div id="frac-fixed-range" class="hidden">
@@ -112,12 +112,12 @@
                 <h3>Options</h3>
                 <div class="chk-group">
                     <label>
-                        <input type="checkbox" id="frac-mixed">
+                        <input type="checkbox" id="frac-mixed" checked>
                         Mélanger avec Entiers (50%)<br>
                         <small style="color:#666">Ex: 2 + 3/4 (Max 1 entier par calcul)</small>
                     </label>
                     <label>
-                        <input type="checkbox" id="frac-negatives">
+                        <input type="checkbox" id="frac-negatives" checked>
                         Inclure nombres négatifs (50%)
                     </label>
                 </div>
@@ -184,7 +184,7 @@
             <div class="chk-group">
                 <label><input type="radio" name="qmode" value="limited" checked> Limité :</label>
             </div>
-            <input type="number" id="num-questions" value="10" min="1">
+            <input type="number" id="num-questions" value="20" min="1">
             <div class="chk-group" style="margin-top:10px;">
                 <label><input type="radio" name="qmode" value="unlimited"> Illimité</label>
             </div>
