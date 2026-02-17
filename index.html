@@ -31,8 +31,7 @@
 
                 <h3>Opérations</h3>
                 <div class="chk-group">
-                    <label><input type="checkbox" id="int-op-add" checked> Addition</label>
-                    <label><input type="checkbox" id="int-op-sub" checked> Soustraction</label>
+                    <label><input type="checkbox" id="int-op-add-sub" checked> Addition / Soustraction</label>
                     <label><input type="checkbox" id="int-op-mul" checked> Multiplication</label>
                     <label><input type="checkbox" id="int-op-div"> Division</label>
                     <!-- On cache l'entrainement avec les carrés -->
@@ -83,8 +82,7 @@
 
                 <h3>Opérations</h3>
                 <div class="chk-group">
-                    <label><input type="checkbox" id="frac-op-add" checked> Addition</label>
-                    <label><input type="checkbox" id="frac-op-sub" checked> Soustraction</label>
+                    <label><input type="checkbox" id="frac-op-add-sub" checked> Addition / Soustraction</label>
                     <label><input type="checkbox" id="frac-op-mul" checked> Multiplication</label>
                     <label><input type="checkbox" id="frac-op-div" checked> Division</label>
                 </div>
@@ -860,8 +858,10 @@
 
                 if (state.gameType === 'int') {
                     state.ops = [];
-                    if (qs("#int-op-add").checked) state.ops.push('add');
-                    if (qs("#int-op-sub").checked) state.ops.push('sub');
+                    if (qs("#int-op-add-sub").checked) {
+                        state.ops.push('add');
+                        state.ops.push('sub');
+                    }
                     if (qs("#int-op-mul").checked) state.ops.push('mul');
                     if (qs("#int-op-sq").checked) state.ops.push('sq');
                     if (qs("#int-op-div").checked) state.ops.push('div');
@@ -880,8 +880,10 @@
                 }
                 else if (state.gameType === 'frac') {
                     state.ops = [];
-                    if (qs("#frac-op-add").checked) state.ops.push('add');
-                    if (qs("#frac-op-sub").checked) state.ops.push('sub');
+                    if (qs("#frac-op-add-sub").checked){
+                        state.ops.push('add');
+                        state.ops.push('sub');
+                    }
                     if (qs("#frac-op-mul").checked) state.ops.push('mul');
                     if (qs("#frac-op-div").checked) state.ops.push('div');
                     if (!state.ops.length) return alert("Choisis une opération");
