@@ -202,6 +202,7 @@
             <div class="top-bar">
                 <span id="progress"></span>
                 <span id="score"></span>
+                <span id="timer"></span>
                 <span id="range-info"></span>
                 <button id="menu-btn">Menu</button>
             </div>
@@ -364,6 +365,10 @@
             let state = {};
 
             function reset() {
+                // if an interval exists, clear it
+                if (state && state.timer_id) {
+                    clearInterval(state.timer_id);
+                }
                 state = {
                     gameType: 'int',
                     ops: [],
@@ -372,7 +377,8 @@
                     fracMode: 'dynamic', fracCap: 0,
                     litMode: 'expand', litTypes: [], litUseY: false,
                     index: 0, total: 0, unlimited: false, score: 0, current: null,
-                    isAnimating: false 
+                    isAnimating: false,
+                    start_time : 0, timer_id: null
                 };
             }
 
@@ -606,7 +612,9 @@
 
                 // End check
                 if (!state.unlimited && state.index >= state.total) {
-                    showSessionEnd(`Score : ${state.score} / ${state.total}`);
+                    MessageFin = `Score : ${state.score} / ${state.total} <br>`;
+                    MessageFin += `${qs("#timer").textContent}`;
+                    showSessionEnd(MessageFin);
                     return;
                 }
                 state.index++;
@@ -626,6 +634,7 @@
 
                 qs("#progress").textContent = state.unlimited ? "Q: " + state.index : `Q: ${state.index} / ${state.total}`;
                 qs("#score").textContent = "Score: " + state.score;
+                updateTimer();
 
                 // Update virtual keyboard & input attributes for the current mode
                 updateInputForMode(state.gameType);
@@ -839,11 +848,31 @@
             }
 
             function backToMenu() {
+                // stop timer to avoid background intervals
+                if (state.timer_id) {
+                    clearInterval(state.timer_id);
+                    state.timer_id = null;
+                }
+                // clear start_time so updateTimer() is no-op
+                state.start_time = 0;
+                // optional: clear displayed timer
+                qs("#timer").textContent = "";
+
                 qs("#exercise").classList.add("hidden");
                 qs("#config").classList.remove("hidden");
                 qs("#main-nav").classList.remove("hidden");
                 // Blur answer to hide keyboard when returning to menu
                 try { qs("#answer").blur(); } catch (e) { }
+            }
+
+            function updateTimer() {
+                if (!state.start_time) return;
+                let elapsed = Date.now() - state.start_time;
+                let seconds = Math.floor(elapsed / 1000);
+                let minutes = Math.floor(seconds / 60);
+                let remaining = seconds % 60;
+                if (remaining < 10) remaining = "0" + remaining;
+                qs("#timer").textContent = "Chrono: " + minutes + ":" + remaining;
             }
 
             qs("#start-btn").onclick = () => {
@@ -905,6 +934,20 @@
                 qs("#config").classList.add("hidden");
                 qs("#main-nav").classList.add("hidden");
                 qs("#exercise").classList.remove("hidden");
+
+                // clear any previous timer first (safety)
+                if (state.timer_id) {
+                    clearInterval(state.timer_id);
+                    state.timer_id = null;
+                }
+
+                state.start_time = Date.now();
+
+                // Affiche immédiatement le chrono dès le départ
+                updateTimer();
+                // Maj du chrono chaque seconde
+                state.timer_id = setInterval(updateTimer, 1000);
+                
                 nextQuestion();
             };
 
@@ -1009,7 +1052,11 @@
 
             // --- Session end modal handling (remplace alert)
             function showSessionEnd(msg) {
-                qs("#session-end-msg").textContent = msg;
+                if (state.timer_id) {
+                    clearInterval(state.timer_id);
+                    state.timer_id = null;
+                }
+                qs("#session-end-msg").innerHTML = msg;
                 qs("#session-end").classList.remove("hidden");
                 // Blur input so keyboard hides when modal is up
                 try { qs("#answer").blur(); } catch (e) { }
