@@ -19,6 +19,7 @@
             <button id="tab-int" class="active">Entiers</button>
             <button id="tab-frac">Fractions</button>
             <button id="tab-lit">Littéral</button>
+            <button id="tab-eval">Évaluation</button>
         </nav>
 
         <!-- ================= CONFIGURATION ================= -->
@@ -179,15 +180,114 @@
                 <p class="help">Coefficients entre 1 et 5.</p>
             </div>
 
+            <!-- ***** CONFIG ÉVALUATION ***** -->
+            <div id="config-eval" class="hidden">
+                <h2>Mode Évaluation</h2>
+                
+                <div class="form-group" style="background:#e3f2fd; padding:15px; border-radius:8px;">
+                    <label>⏱ Durée de la session (minutes) :</label>
+                    <input type="number" id="eval-duration" value="20" min="1">
+                </div>
+                <p class="help">La session s'arrête si le temps est écoulé ou si toutes les questions sont traitées.</p>
+
+                <!-- 1. Section Entiers -->
+                <div class="card" style="border:1px solid #ddd; box-shadow:none;">
+                    <h3>
+                        <label style="display:inline; font-weight:bold;">
+                            <input type="checkbox" id="eval-check-int"> Inclure Entiers
+                        </label>
+                    </h3>
+                    <div id="eval-opt-int" class="hidden">
+                        <div class="form-group">
+                            <label>Nombre de questions :</label>
+                            <input type="number" id="eval-num-int" value="10" min="1">
+                        </div>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-int-op-add-sub" checked> Addition/Soustraction</label>
+                            <label><input type="checkbox" id="eval-int-op-mul" checked> Multiplication</label>
+                            <label><input type="checkbox" id="eval-int-op-div"> Division</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Range (Min / Max) :</label>
+                            <div style="display:flex; gap:10px; justify-content:center;">
+                                <input type="number" id="eval-int-min" value="2" style="width:40%">
+                                <input type="number" id="eval-int-max" value="20" style="width:40%">
+                            </div>
+                        </div>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-int-neg" checked> Nombres négatifs</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Section Fractions -->
+                <div class="card" style="border:1px solid #ddd; box-shadow:none;">
+                    <h3>
+                        <label style="display:inline; font-weight:bold;">
+                            <input type="checkbox" id="eval-check-frac"> Inclure Fractions
+                        </label>
+                    </h3>
+                    <div id="eval-opt-frac" class="hidden">
+                        <div class="form-group">
+                            <label>Nombre de questions :</label>
+                            <input type="number" id="eval-num-frac" value="5" min="1">
+                        </div>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-frac-op-add-sub" checked> Addition/Soustraction</label>
+                            <label><input type="checkbox" id="eval-frac-op-mul" checked> Multiplication</label>
+                            <label><input type="checkbox" id="eval-frac-op-div"> Division</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Max (Num/Dén) :</label>
+                            <input type="number" id="eval-frac-max" value="10">
+                        </div>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-frac-neg" checked> Inclure des nombres négatifs</label>
+                            <label><input type="checkbox" id="eval-frac-mixed" checked> Mélanger avec entiers</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Section Littéral -->
+                <div class="card" style="border:1px solid #ddd; box-shadow:none;">
+                    <h3>
+                        <label style="display:inline; font-weight:bold;">
+                            <input type="checkbox" id="eval-check-lit"> Inclure Littéral
+                        </label>
+                    </h3>
+                    <div id="eval-opt-lit" class="hidden">
+                        <div class="form-group">
+                            <label>Nombre de questions :</label>
+                            <input type="number" id="eval-num-lit" value="5" min="1">
+                        </div>
+                        <h4>Type de tâche (Au moins 1)</h4>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-lit-mode-expand" checked> Développer</label>
+                            <label><input type="checkbox" id="eval-lit-mode-solve" checked> Résoudre Équation</label>
+                        </div>
+                        <h4>Complexité</h4>
+                        <div class="chk-group">
+                            <label><input type="checkbox" id="eval-lit-dist-simple" checked> Distributivité simple</label>
+                            <label><input type="checkbox" id="eval-lit-dist-double" checked> Distributivité double</label>
+                            <label><input type="checkbox" id="eval-lit-use-y"> Inclure variable 'y'</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <hr>
 
-            <h3>Nombre de questions</h3>
-            <div class="chk-group">
-                <label><input type="radio" name="qmode" value="limited" checked> Limité :</label>
-            </div>
-            <input type="number" id="num-questions" value="20" min="1">
-            <div class="chk-group" style="margin-top:10px;">
-                <label><input type="radio" name="qmode" value="unlimited"> Illimité</label>
+            <div id="global-options">
+                <hr>
+                <h3>Nombre de questions</h3>
+                <div class="chk-group">
+                    <label><input type="radio" name="qmode" value="limited" checked> Limité :</label>
+                </div>
+                <input type="number" id="num-questions" value="20" min="1">
+                <div class="chk-group" style="margin-top:10px;">
+                    <label><input type="radio" name="qmode" value="unlimited"> Illimité</label>
+                </div>
             </div>
 
             <br><br>
@@ -264,6 +364,12 @@
             const qs = s => document.querySelector(s);
             const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
             const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+            const shuffleArray = (array) => {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            };
 
             // ================= FRACTIONS =================
             class Fraction {
@@ -365,20 +471,24 @@
             let state = {};
 
             function reset() {
-                // if an interval exists, clear it
-                if (state && state.timer_id) {
-                    clearInterval(state.timer_id);
-                }
+                if (state && state.timer_id) clearInterval(state.timer_id);
                 state = {
-                    gameType: 'int',
+                    gameType: 'int', // 'int', 'frac', 'lit', ou 'eval'
+                    // Config Entrainement standard
                     ops: [],
                     intMin: 0, intMax: 0, intNeg: false, intMode: 'fixed', intInc: 0, intCap: 0,
-                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true,
-                    fracMode: 'dynamic', fracCap: 0,
+                    fracMax: 4, fracNeg: false, fracMixed: false, fracSimplify: true, fracMode: 'dynamic', fracCap: 0,
                     litMode: 'expand', litTypes: [], litUseY: false,
+                    
+                    // Variables communes
                     index: 0, total: 0, unlimited: false, score: 0, current: null,
                     isAnimating: false,
-                    start_time : 0, timer_id: null
+                    start_time: 0, timer_id: null,
+                    
+                    // Variables Spécifiques Évaluation
+                    evalQueue: [],     // Liste des questions pré-générées (configurations)
+                    evalDuration: 0,   // Durée en ms
+                    evalScores: { int:0, frac:0, lit:0, totalInt:0, totalFrac:0, totalLit:0 } // Pour le bilan
                 };
             }
 
@@ -607,39 +717,61 @@
 
             // --- GAME ---
             function nextQuestion() {
-                // On déverrouille le jeu (au cas où)
                 state.isAnimating = false;
 
                 // End check
                 if (!state.unlimited && state.index >= state.total) {
-                    MessageFin = `Score : ${state.score} / ${state.total} <br>`;
-                    MessageFin += `${qs("#timer").textContent}`;
-                    showSessionEnd(MessageFin);
+                    finishGame(); // On extrait la fin de jeu dans une fonction pour l'appeler aussi au timeout
                     return;
                 }
+                
+                // Préparation question Eval (Pop config from queue)
+                let currentType = state.gameType;
+                let currentEvalConfig = null;
+
+                if (state.gameType === 'eval') {
+                    currentEvalConfig = state.evalQueue[state.index]; // On prend la config de l'index actuel
+                    currentType = currentEvalConfig.type;
+                    
+                    // Appliquer config temporaire à l'état pour que les générateurs (genInt, genFrac) utilisent les bonnes valeurs
+                    if (currentType === 'int') {
+                        state.ops = currentEvalConfig.ops;
+                        state.intMin = currentEvalConfig.min;
+                        state.intMax = currentEvalConfig.max;
+                        state.intNeg = currentEvalConfig.neg;
+                    } else if (currentType === 'frac') {
+                        state.ops = currentEvalConfig.ops;
+                        state.fracMax = currentEvalConfig.max;
+                        state.fracNeg = currentEvalConfig.neg;
+                        state.fracMixed = currentEvalConfig.mixed;
+                    } else if (currentType === 'lit') {
+                        // En eval, litMode peut varier par question (random entre les choix cochés)
+                        state.litMode = currentEvalConfig.modes[rand(0, currentEvalConfig.modes.length - 1)];
+                        state.litTypes = currentEvalConfig.types;
+                        state.litUseY = currentEvalConfig.useY;
+                    }
+                }
+                
                 state.index++;
 
-                // NETTOYAGE COMPLET DU FEEDBACK
+                // UI Reset
                 const fb = qs("#feedback");
                 fb.textContent = "";
-                // On supprime toutes les classes de couleur et on met la neutre
                 fb.className = "feedback-neutral"; 
-
                 qs("#show-answer-btn").classList.add("hidden");
                 qs("#next-btn").classList.add("hidden");
                 qs("#answer").value = "";
-                // keep the keyboard open: focus the input (will be reinforced below)
                 const inputEl = qs("#answer");
                 inputEl.focus();
 
                 qs("#progress").textContent = state.unlimited ? "Q: " + state.index : `Q: ${state.index} / ${state.total}`;
                 qs("#score").textContent = "Score: " + state.score;
-                updateTimer();
+                // updateTimer() géré par interval
+                
+                // Set Keyboards
+                updateInputForMode(currentType); // Utilise le type réel (peut être int/frac/lit dans une eval)
 
-                // Update virtual keyboard & input attributes for the current mode
-                updateInputForMode(state.gameType);
-
-                if (state.gameType === 'lit') {
+                if (currentType === 'lit') {
                     qs("#range-info").textContent = state.litMode === 'expand' ? "Développer" : "Équations";
                     if (state.litMode === 'expand') {
                         let data = genLitExpression();
@@ -649,7 +781,7 @@
                         state.current = { q: data.q, correct: data.ans, display: data.display, mode: 'solve' };
                     }
                     qs("#question").innerHTML = state.current.q;
-                } else if (state.gameType === 'frac') {
+                } else if (currentType === 'frac') {
                     let f1 = genFrac(), f2 = genFrac();
                     if (state.fracMixed && Math.random() < 0.3) { if (Math.random() < 0.5) f1.d = 1; else f2.d = 1; }
                     let op = state.ops[rand(0, state.ops.length - 1)];
@@ -730,27 +862,28 @@
 
                 let input = qs("#answer").value.replace(/\s+/g, '').toLowerCase();
 
-                // 2. Gestion du champ vide : on nettoie le message pour ne pas laisser un vieux "Faux"
+                // 2. Gestion du champ vide
                 if (!input) {
                     qs("#feedback").textContent = "";
                     return;
                 }
 
-                // On détermine le statut de la réponse : 'correct', 'simplify', ou 'wrong'
                 let status = 'wrong'; 
                 let feedbackMsg = "";
 
-                // --- LOGIQUE DE VÉRIFICATION (MATHS) ---
-                
-                if (state.gameType === 'lit') {
-                    let tx = 13, ty = 17; let tx2 = 7, ty2 = 23; // Nombres premiers pour tester
+                // --- LOGIQUE DE VÉRIFICATION CORRIGÉE ---
+                // On vérifie le type de la QUESTION (state.current.mode) et non le type de JEU (state.gameType)
+                // car en mode 'eval', le gameType est toujours 'eval'.
+
+                // 1. LITTÉRAL (modes 'expand' ou 'solve')
+                if (state.current.mode === 'expand' || state.current.mode === 'solve') {
+                    let tx = 13, ty = 17; let tx2 = 7, ty2 = 23; 
                     if (state.current.mode === 'expand') {
                         let targetVal = evaluatePolyObj(state.current.correct, tx, ty);
                         let userVal = evaluateString(input, tx, ty);
                         let targetVal2 = evaluatePolyObj(state.current.correct, tx2, ty2);
                         let userVal2 = evaluateString(input, tx2, ty2);
 
-                        // Vérification mathématique (à 0.001 près)
                         if (Math.abs(userVal - targetVal) < 0.001 && Math.abs(userVal2 - targetVal2) < 0.001) {
                             if (input.includes("(")) {
                                 status = 'simplify';
@@ -763,7 +896,7 @@
                             }
                         }
                     } else {
-                        // Mode Résoudre (Solve)
+                        // Mode Résoudre
                         let rhs = input.startsWith("x=") ? input.substring(2) : input;
                         if (hasUnsimplifiedFraction(rhs)) {
                             status = 'simplify';
@@ -781,8 +914,10 @@
                         }
                     }
                 } 
-                else if (state.gameType === 'frac') {
+                // 2. FRACTIONS (mode 'frac')
+                else if (state.current.mode === 'frac') {
                     let userF = Fraction.parse(input);
+                    // On vérifie si parsing réussi ET si c'est mathématiquement égal
                     if (userF && state.current.correct.equals(input)) {
                         if (userF.n !== state.current.correct.n) {
                             status = 'simplify';
@@ -792,57 +927,46 @@
                         }
                     }
                 } 
+                // 3. ENTIERS (mode 'int')
                 else {
-                    // Entiers
                     if (Number(input) === state.current.correct) {
                         status = 'correct';
                     }
                 }
 
                 // --- CONSÉQUENCES (POINTS ET COULEURS) ---
-
                 let fbEl = qs("#feedback");
 
                 if (status === 'correct') {
-                    // VERROUILLAGE : On empêche de re-cliquer pendant l'animation
                     state.isAnimating = true;
-
-                    // C'est GAGNÉ
-                    // On ajoute les points (1, 0.5 ou 0 selon l'historique)
                     state.score += state.current.potentialPoints;
+
+                    if (state.gameType === 'eval') {
+                        if (state.current.mode === 'int') state.evalScores.int += state.current.potentialPoints;
+                        else if (state.current.mode === 'frac') state.evalScores.frac += state.current.potentialPoints;
+                        else if (state.current.mode === 'expand' || state.current.mode === 'solve') state.evalScores.lit += state.current.potentialPoints;
+                    }
                     
                     fbEl.textContent = "Correct !";
-                    fbEl.className = "feedback-success"; // VERT
+                    fbEl.className = "feedback-success"; 
                     
-                    // Augmentation difficulté dynamique
-                    // La difficulté n'augmente que si le score augmente
-                    if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.score, state.intCap);
-                    if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + state.score, state.fracCap);
+                    // Augmentation difficulté dynamique (Seulement si PAS en mode Eval)
+                    if (state.gameType !== 'eval') {
+                        if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.score, state.intCap);
+                        if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + state.score, state.fracCap);
+                    }
 
-                    // Passer à la suite après un court délai
                     setTimeout(nextQuestion, 500);
                 } 
                 else if (status === 'simplify') {
-                    // Pas de verrouillage ici, le joueur doit pouvoir corriger
-
-                    // C'est PRESQUE BON (Orange)
                     fbEl.textContent = feedbackMsg;
-                    fbEl.className = "feedback-warning"; // ORANGE
-                    
-                    // Pénalité : Si on avait encore droit à 1 pt, on passe à 0.5.
-                    // (Si on était déjà à 0, on reste à 0).
-                    if (state.current.potentialPoints > 0.5) {
-                        state.current.potentialPoints = 0.5;
-                    }
+                    fbEl.className = "feedback-warning"; 
+                    if (state.current.potentialPoints > 0.5) state.current.potentialPoints = 0.5;
                 } 
                 else {
-                    // C'est FAUX (Rouge)
                     fbEl.textContent = "Faux, réessaie.";
-                    fbEl.className = "feedback-error"; // ROUGE
-                    
-                    // Pénalité fatale : plus aucun point possible pour cette question
+                    fbEl.className = "feedback-error"; 
                     state.current.potentialPoints = 0;
-                    
                     qs("#show-answer-btn").classList.remove("hidden");
                 }
             }
@@ -865,89 +989,203 @@
                 try { qs("#answer").blur(); } catch (e) { }
             }
 
+            function finishGame() {
+                if (state.timer_id) clearInterval(state.timer_id);
+                
+                let msg = "";
+                if (state.gameType === 'eval') {
+                    msg = `<strong>Évaluation terminée !</strong><br><br>`;
+                    msg += `Score Global : ${state.score} / ${state.total}<br><hr style="margin:10px 0; border:0; border-top:1px solid #eee;">`;
+                    
+                    // Affichage des détails si la catégorie était présente
+                    if (state.evalScores.totalInt > 0) 
+                        msg += `Entiers : ${state.evalScores.int} / ${state.evalScores.totalInt}<br>`;
+                    if (state.evalScores.totalFrac > 0) 
+                        msg += `Fractions : ${state.evalScores.frac} / ${state.evalScores.totalFrac}<br>`;
+                    if (state.evalScores.totalLit > 0) 
+                        msg += `Littéral : ${state.evalScores.lit} / ${state.evalScores.totalLit}<br>`;
+                } else {
+                    msg = `Score : ${state.score} / ${state.total} <br>`;
+                    let elapsed = Math.floor((Date.now() - state.start_time)/1000);
+                    let m = Math.floor(elapsed/60); let s = elapsed%60;
+                    msg += `Temps : ${m}m ${s}s`;
+                }
+                showSessionEnd(msg);
+            }
+
             function updateTimer() {
                 if (!state.start_time) return;
-                let elapsed = Date.now() - state.start_time;
-                let seconds = Math.floor(elapsed / 1000);
-                let minutes = Math.floor(seconds / 60);
-                let remaining = seconds % 60;
-                if (remaining < 10) remaining = "0" + remaining;
-                qs("#timer").textContent = "Chrono: " + minutes + ":" + remaining;
+                
+                if (state.gameType === 'eval') {
+                    // COMPTE A REBOURS
+                    let elapsed = Date.now() - state.start_time;
+                    let remaining = state.evalDuration - elapsed;
+                    
+                    if (remaining <= 0) {
+                        qs("#timer").textContent = "00:00";
+                        finishGame();
+                        return;
+                    }
+                    
+                    let seconds = Math.floor(remaining / 1000);
+                    let minutes = Math.floor(seconds / 60);
+                    let remSec = seconds % 60;
+                    if (remSec < 10) remSec = "0" + remSec;
+                    qs("#timer").textContent = "Fin dans : " + minutes + ":" + remSec;
+                    
+                } else {
+                    // CHRONO CLASSIQUE (UP)
+                    let elapsed = Date.now() - state.start_time;
+                    let seconds = Math.floor(elapsed / 1000);
+                    let minutes = Math.floor(seconds / 60);
+                    let remaining = seconds % 60;
+                    if (remaining < 10) remaining = "0" + remaining;
+                    qs("#timer").textContent = "Chrono: " + minutes + ":" + remaining;
+                }
             }
 
             qs("#start-btn").onclick = () => {
                 reset();
+                
+                // --- 1. DÉTECTION DU MODE ---
                 if (qs("#tab-int").classList.contains("active")) state.gameType = 'int';
                 else if (qs("#tab-frac").classList.contains("active")) state.gameType = 'frac';
-                else state.gameType = 'lit';
+                else if (qs("#tab-lit").classList.contains("active")) state.gameType = 'lit';
+                else if (qs("#tab-eval").classList.contains("active")) state.gameType = 'eval';
 
-                let qm = document.querySelector('input[name="qmode"]:checked').value;
-                state.unlimited = (qm === 'unlimited');
-                state.total = Number(qs("#num-questions").value) || 10;
+                // --- 2. CONFIGURATION SELON LE MODE ---
+                
+                if (state.gameType === 'eval') {
+                    // *** MODE ÉVALUATION ***
+                    state.unlimited = false; // Jamais illimité en eval
+                    let durationMin = Number(qs("#eval-duration").value) || 20;
+                    state.evalDuration = durationMin * 60 * 1000;
+                    state.evalQueue = [];
 
-                if (state.gameType === 'int') {
-                    state.ops = [];
-                    if (qs("#int-op-add-sub").checked) {
-                        state.ops.push('add');
-                        state.ops.push('sub');
+                    // a) Ajouter Entiers
+                    if (qs("#eval-check-int").checked) {
+                        let count = Number(qs("#eval-num-int").value) || 5;
+                        let ops = [];
+                        if (qs("#eval-int-op-add-sub").checked) { ops.push('add'); ops.push('sub'); }
+                        if (qs("#eval-int-op-mul").checked) ops.push('mul');
+                        if (qs("#eval-int-op-div").checked) ops.push('div');
+                        if (ops.length === 0) ops = ['add']; // fallback
+
+                        let cfg = {
+                            type: 'int',
+                            ops: ops,
+                            min: Number(qs("#eval-int-min").value),
+                            max: Number(qs("#eval-int-max").value),
+                            neg: qs("#eval-int-neg").checked
+                        };
+                        state.evalScores.totalInt = count;
+                        for(let i=0; i<count; i++) state.evalQueue.push({ ...cfg });
                     }
-                    if (qs("#int-op-mul").checked) state.ops.push('mul');
-                    if (qs("#int-op-sq").checked) state.ops.push('sq');
-                    if (qs("#int-op-div").checked) state.ops.push('div');
-                    if (!state.ops.length) return alert("Choisis une opération");
-                    state.intNeg = qs("#int-negatives").checked;
-                    state.intMode = document.querySelector('input[name="int-range-mode"]:checked').value;
-                    if (state.intMode === 'fixed') {
-                        state.intMin = Number(qs("#int-fixed-min").value);
-                        state.intMax = Number(qs("#int-fixed-max").value);
-                    } else {
-                        // Dynamic start
-                        state.intMin = 2;
-                        state.intMax = Number(qs("#int-dyn-max").value) || 10;
-                        state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value) || 100;
+
+                    // b) Ajouter Fractions
+                    if (qs("#eval-check-frac").checked) {
+                        let count = Number(qs("#eval-num-frac").value) || 5;
+                        let ops = [];
+                        if (qs("#eval-frac-op-add-sub").checked) { ops.push('add'); ops.push('sub'); }
+                        if (qs("#eval-frac-op-mul").checked) ops.push('mul');
+                        if (qs("#eval-frac-op-div").checked) ops.push('div');
+                        if (ops.length === 0) ops = ['add'];
+
+                        let cfg = {
+                            type: 'frac',
+                            ops: ops,
+                            max: Number(qs("#eval-frac-max").value),
+                            neg: qs("#eval-frac-neg").checked,
+                            mixed: qs("#eval-frac-mixed").checked
+                        };
+                        state.evalScores.totalFrac = count;
+                        for(let i=0; i<count; i++) state.evalQueue.push({ ...cfg });
+                    }
+
+                    // c) Ajouter Littéral
+                    if (qs("#eval-check-lit").checked) {
+                        let count = Number(qs("#eval-num-lit").value) || 5;
+                        let modes = [];
+                        if (qs("#eval-lit-mode-expand").checked) modes.push('expand');
+                        if (qs("#eval-lit-mode-solve").checked) modes.push('solve');
+                        if (modes.length === 0) modes = ['expand'];
+
+                        let types = [];
+                        if (qs("#eval-lit-dist-simple").checked) types.push('dist-simple');
+                        if (qs("#eval-lit-dist-double").checked) types.push('dist-double');
+                        if (types.length === 0) types.push('dist-simple');
+
+                        let cfg = {
+                            type: 'lit',
+                            modes: modes,
+                            types: types,
+                            useY: qs("#eval-lit-use-y").checked
+                        };
+                        state.evalScores.totalLit = count;
+                        for(let i=0; i<count; i++) state.evalQueue.push({ ...cfg });
+                    }
+
+                    if (state.evalQueue.length === 0) return alert("Sélectionne au moins un type de question !");
+                    
+                    shuffleArray(state.evalQueue);
+                    state.total = state.evalQueue.length;
+
+                } else {
+                    // *** MODES ENTRAINEMENT (Code existant légèrement adapté) ***
+                    let qm = document.querySelector('input[name="qmode"]:checked').value;
+                    state.unlimited = (qm === 'unlimited');
+                    state.total = Number(qs("#num-questions").value) || 10;
+
+                    if (state.gameType === 'int') {
+                        state.ops = [];
+                        if (qs("#int-op-add-sub").checked) { state.ops.push('add'); state.ops.push('sub'); }
+                        if (qs("#int-op-mul").checked) state.ops.push('mul');
+                        if (qs("#int-op-sq").checked) state.ops.push('sq');
+                        if (qs("#int-op-div").checked) state.ops.push('div');
+                        if (!state.ops.length) return alert("Choisis une opération");
+                        state.intNeg = qs("#int-negatives").checked;
+                        state.intMode = document.querySelector('input[name="int-range-mode"]:checked').value;
+                        if (state.intMode === 'fixed') {
+                            state.intMin = Number(qs("#int-fixed-min").value);
+                            state.intMax = Number(qs("#int-fixed-max").value);
+                        } else {
+                            state.intMin = 2; state.intMax = Number(qs("#int-dyn-max").value) || 10;
+                            state.intInc = 2; state.intCap = Number(qs("#int-dyn-cap").value) || 100;
+                        }
+                    } else if (state.gameType === 'frac') {
+                        state.ops = [];
+                        if (qs("#frac-op-add-sub").checked) { state.ops.push('add'); state.ops.push('sub'); }
+                        if (qs("#frac-op-mul").checked) state.ops.push('mul');
+                        if (qs("#frac-op-div").checked) state.ops.push('div');
+                        if (!state.ops.length) return alert("Choisis une opération");
+                        state.fracMode = document.querySelector('input[name="frac-range-mode"]:checked').value;
+                        state.fracMixed = qs("#frac-mixed").checked;
+                        state.fracNeg = qs("#frac-negatives").checked;
+                        if (state.fracMode === 'fixed') state.fracMax = Number(qs("#frac-fixed-max").value) || 10;
+                        else { state.fracMax = Number(qs("#frac-dyn-max").value) || 4; state.fracCap = Number(qs("#frac-dyn-cap").value) || 20; }
+                    } else if (state.gameType === 'lit') {
+                        state.litMode = document.querySelector('input[name="lit-mode"]:checked').value;
+                        state.litUseY = qs("#lit-use-y").checked;
+                        state.litTypes = [];
+                        if (qs("#lit-type-dist-simple").checked) state.litTypes.push('dist-simple');
+                        if (qs("#lit-type-dist-double").checked) state.litTypes.push('dist-double');
+                        if (!state.litTypes.length) return alert("Choisis un type d'expression");
                     }
                 }
-                else if (state.gameType === 'frac') {
-                    state.ops = [];
-                    if (qs("#frac-op-add-sub").checked){
-                        state.ops.push('add');
-                        state.ops.push('sub');
-                    }
-                    if (qs("#frac-op-mul").checked) state.ops.push('mul');
-                    if (qs("#frac-op-div").checked) state.ops.push('div');
-                    if (!state.ops.length) return alert("Choisis une opération");
-                    state.fracMode = document.querySelector('input[name="frac-range-mode"]:checked').value;
-                    state.fracMixed = qs("#frac-mixed").checked;
-                    state.fracNeg = qs("#frac-negatives").checked;
-                    // Simplification toujours true
-                    if (state.fracMode === 'fixed') state.fracMax = Number(qs("#frac-fixed-max").value) || 10;
-                    else { state.fracMax = Number(qs("#frac-dyn-max").value) || 4; state.fracCap = Number(qs("#frac-dyn-cap").value) || 20; }
-                }
-                else {
-                    state.litMode = document.querySelector('input[name="lit-mode"]:checked').value;
-                    state.litUseY = qs("#lit-use-y").checked;
-                    state.litTypes = [];
-                    if (qs("#lit-type-dist-simple").checked) state.litTypes.push('dist-simple');
-                    if (qs("#lit-type-dist-double").checked) state.litTypes.push('dist-double');
-                    if (!state.litTypes.length) return alert("Choisis un type d'expression");
-                }
+
+                // UI SWITCH
                 qs("#config").classList.add("hidden");
                 qs("#main-nav").classList.add("hidden");
                 qs("#exercise").classList.remove("hidden");
-
-                // clear any previous timer first (safety)
-                if (state.timer_id) {
-                    clearInterval(state.timer_id);
-                    state.timer_id = null;
-                }
-
-                state.start_time = Date.now();
-
-                // Affiche immédiatement le chrono dès le départ
-                updateTimer();
-                // Maj du chrono chaque seconde
-                state.timer_id = setInterval(updateTimer, 1000);
                 
+                // masquer options globales qui ne servent pas en eval (le bouton suivant/menu reste, mais on cache les infos range si besoin)
+                if(state.gameType === 'eval') qs("#range-info").style.display = 'none';
+                else qs("#range-info").style.display = 'inline';
+
+                if (state.timer_id) { clearInterval(state.timer_id); state.timer_id = null; }
+                state.start_time = Date.now();
+                updateTimer();
+                state.timer_id = setInterval(updateTimer, 1000);
                 nextQuestion();
             };
 
@@ -991,6 +1229,45 @@
                     if (t === 'int' || t === 'frac') updateRangesUI(t);
                 }
             });
+
+             qs("#tab-eval").onclick = () => {
+                ['int', 'frac', 'lit'].forEach(x => {
+                    qs("#tab-" + x).classList.remove("active");
+                    qs("#config-" + x).classList.add("hidden");
+                });
+                qs("#tab-eval").classList.add("active");
+                qs("#config-eval").classList.remove("hidden");
+                
+                // CORRECTION ICI : On cache le conteneur global proprement via la classe hidden
+                qs("#global-options").classList.add("hidden");
+            };
+
+            // Rétablir l'affichage des options globales si on quitte l'onglet Eval
+            ['int', 'frac', 'lit'].forEach(t => {
+                let oldClick = qs("#tab-" + t).onclick;
+                qs("#tab-" + t).onclick = () => {
+                    oldClick(); // Appel l'ancien handler
+                    qs("#config-eval").classList.add("hidden");
+                    qs("#tab-eval").classList.remove("active");
+                    
+                    // CORRECTION ICI : On réaffiche le conteneur global
+                    qs("#global-options").classList.remove("hidden");
+                };
+            });
+
+            // Toggles interne au menu Eval
+            qs("#eval-check-int").onchange = (e) => {
+                if(e.target.checked) qs("#eval-opt-int").classList.remove("hidden");
+                else qs("#eval-opt-int").classList.add("hidden");
+            };
+            qs("#eval-check-frac").onchange = (e) => {
+                if(e.target.checked) qs("#eval-opt-frac").classList.remove("hidden");
+                else qs("#eval-opt-frac").classList.add("hidden");
+            };
+            qs("#eval-check-lit").onchange = (e) => {
+                if(e.target.checked) qs("#eval-opt-lit").classList.remove("hidden");
+                else qs("#eval-opt-lit").classList.add("hidden");
+            };
 
             function updateRangesUI(type) {
                 let mode = document.querySelector(`input[name="${type}-range-mode"]:checked`).value;
