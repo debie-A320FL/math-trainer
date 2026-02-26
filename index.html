@@ -952,8 +952,8 @@
                     
                     // Augmentation difficulté dynamique (Seulement si PAS en mode Eval)
                     if (state.gameType !== 'eval') {
-                        if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + state.score, state.intCap);
-                        if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + state.score, state.fracCap);
+                        if (state.gameType === 'int' && state.intMode === 'dynamic') state.intMax = Math.min(state.intMax + 2 * (state.current.potentialPoints == 1), state.intCap);
+                        if (state.gameType === 'frac' && state.fracMode === 'dynamic') state.fracMax = Math.min(state.fracMax + (state.current.potentialPoints == 1), state.fracCap);
                     }
 
                     setTimeout(nextQuestion, 500);
